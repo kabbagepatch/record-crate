@@ -15,9 +15,9 @@ export default defineConfig({
 
     manifest: {
       name: 'Record Crate',
-      short_name: 'vinyl',
-      description: 'Track your Vinyl listens',
-      theme_color: '#34363d',
+      short_name: 'Crate',
+      description: 'Track your Vinyl Activity and Catalog',
+      theme_color: '#201409',
     },
 
     workbox: {
