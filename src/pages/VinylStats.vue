@@ -55,6 +55,7 @@ const mostPlayedVinyls = computed(() => {
   const counts: Record<string, { play: VinylPlay; count: number }> = {};
   plays.value.forEach(p => {
     if (!counts[p.vinylId]) counts[p.vinylId] = { play: p, count: 0 };
+    // @ts-ignore
     counts[p.vinylId].count++;
   });
   return Object.values(counts).sort((a, b) => b.count - a.count).slice(0, 3);

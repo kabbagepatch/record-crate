@@ -29,7 +29,7 @@ const onLogout = async () => {
     </a>
     
     <div class="icon-buttons" v-if="userLoaded && currentUser">
-      <button v-if="$route.path.includes('/add')" class="icon-button" @click="$router.back()">
+      <button v-if="$route.path.includes('/catalog/')" class="icon-button" @click="$router.back()">
         <img class="icon" src="./assets/icons/back.png" />
       </button>
       <button class="icon-button" @click="onLogout">

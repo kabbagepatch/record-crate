@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import VinylList from '../components/VinylList.vue';
-import { searchVinyls } from '../services/vinyls';
+import { getVinyls, searchVinyls } from '../services/vinyls';
 import type { Vinyl } from '../types';
 
 const router = useRouter();
@@ -13,11 +13,20 @@ const selectVinyl = (vinyl: Vinyl) => {
 }
 
 const results = ref<Vinyl[]>([]);
+const catalogVinyls = ref<Vinyl[]>([]);
+const existingVinyls = ref<Vinyl[]>([]);
 const loading = ref(false);
 const search = ref(route.query?.search as string);
 
-const searchAlbum = async () => {
+const searchAlbum = async (getCatalog = false) => {
   if (!search.value) return;
+
+  if (getCatalog) catalogVinyls.value = await getVinyls();
+  existingVinyls.value = catalogVinyls.value.filter(v => (
+      v.album.toLowerCase().includes(search.value.toLowerCase())
+      || v.artist.toLowerCase().includes(search.value.toLowerCase())
+    ));
+
   loading.value = true;
   try {
     const vinylResults = await searchVinyls(search.value);
@@ -42,7 +51,7 @@ const onSearch = () => {
   }
 }
 
-onMounted(() => searchAlbum());
+onMounted(() => searchAlbum(true));
 
 </script>
 
@@ -59,9 +68,16 @@ onMounted(() => searchAlbum());
       <img class="icon" src="../assets/icons/search.png" />
     </button>
   </div>
-  <div v-if="loading" class="loading">Searching...</div>
   <div v-if="!results.length" class="loading">Add New Records to Crate</div>
-  <VinylList v-else :vinyls="results" @add="selectVinyl" @vinylSelect="selectVinyl" />
+  <div v-if="loading" class="loading">Searching...</div>
+  <div v-else>
+    <div v-if="existingVinyls.length" >
+      <h3 class="section-title">Already in Crate</h3>
+      <VinylList :vinyls="existingVinyls" />
+      <h3 class="section-title">Results</h3>
+    </div>
+    <VinylList :vinyls="results" @add="selectVinyl" @vinylSelect="selectVinyl" />
+  </div>
 </template>
 
 <style scoped>
@@ -70,6 +86,15 @@ onMounted(() => searchAlbum());
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
+  }
+
+  .section-title {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: hsl(33, 25%, 62%);
+    margin: 10px 0 0 0;
+    font-weight: normal;
   }
 
   .back-button {

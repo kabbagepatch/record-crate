@@ -3,13 +3,17 @@ import type { Vinyl } from '../types';
 
 const props = defineProps<{
   vinyls: Vinyl[],
-  onVinylSelect: (vinyl: Vinyl) => void,
+  onVinylSelect?: (vinyl: Vinyl) => void,
   onAdd?: (vinyl: Vinyl) => void,
 }>()
 
 const addClick = (e: PointerEvent, vinyl: Vinyl) => {
   e.stopPropagation();
   if (props.onAdd) props.onAdd(vinyl);
+}
+
+const selectClick = (vinyl: Vinyl) => {
+  if (props.onVinylSelect) props.onVinylSelect(vinyl)
 }
 
 </script>
@@ -19,7 +23,7 @@ const addClick = (e: PointerEvent, vinyl: Vinyl) => {
     <div
       class="album-item"
       v-for="vinyl in vinyls"
-      @click="onVinylSelect(vinyl)"
+      @click="selectClick(vinyl)"
       :style="{ backgroundColor: vinyl?.albumColors?.length ? vinyl.albumColors[0] + '30' : 'hsl(27, 28%, 20%)' }"
     >
       <div class="album-info">

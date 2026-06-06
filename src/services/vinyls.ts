@@ -6,6 +6,7 @@ import { setupCache, type CacheAxiosResponse, type CachedStorageValue } from 'ax
 const CACHE_KEYS = {
   LIST_VINYLS: 'list-vinyls',
   LIST_PLAYS: 'list-vinyl-plays',
+  vinyl: (id: string) => `vinyl-${id}`,
 };
 
 const service = axios.create({
@@ -56,12 +57,32 @@ export const createVinyl = async (discogsId: string | undefined) => {
 }
 
 export const getVinyl = async (id: string): Promise<Vinyl> => {
-  const response = await service.get(`/vinyls/${id}`);
+  // @ts-ignore
+  const response = await service.get(`/vinyls/${id}`, { id: CACHE_KEYS.vinyl(id) });
   return response.data;
 }
 
 export const favoriteVinyl = async (id: string, favorite: boolean): Promise<Vinyl> => {
-  const response = await service.put(`/vinyls/${id}/favorite`, { favorite });
+  const response = await service.put(`/vinyls/${id}/favorite`, { favorite }, {
+    // @ts-ignore
+    cache: {
+      update: {
+        [CACHE_KEYS.LIST_VINYLS]: (cache: CachedStorageValue) => {
+          if (cache.state !== 'cached') return 'ignore';
+          // @ts-ignore
+          cache.data.data = cache.data.data.map(
+            (v: Vinyl) => v.id === id ? { ...v, favorite } : v
+          );
+          return cache;
+        },
+        [CACHE_KEYS.vinyl(id)]: (cache: CachedStorageValue, res: CacheAxiosResponse) => {
+          if (cache.state !== 'cached') return 'ignore';
+          cache.data.data = { ...res.data, id };
+          return cache;
+        },
+      }
+    }
+  });
   return response.data;
 }
 

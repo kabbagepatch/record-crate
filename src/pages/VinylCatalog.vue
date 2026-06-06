@@ -10,6 +10,8 @@ const vinyls = ref<Vinyl[]>([]);
 const loading = ref(false);
 let vinylData: Vinyl[] = [];
 
+onMounted(() => window.scrollTo(0, 0));
+
 onMounted(async () => {
   loading.value = true;
   try {
