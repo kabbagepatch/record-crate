@@ -1,13 +1,14 @@
 <script setup lang="ts">
+import { onMounted } from 'vue';
 import type { Vinyl } from '../types';
 
 defineProps<{
   vinyl?: Vinyl,
-  onPlay?: any,
-  onAdd?: any,
+  onPlay?: () => void,
+  onAdd?: () => void,
 }>()
 
-window.scrollTo(0, 0);
+onMounted(() => window.scrollTo(0, 0));
 
 </script>
 
@@ -23,10 +24,6 @@ window.scrollTo(0, 0);
       <div v-if="vinyl?.barcode" class="published">Bar Code: {{ vinyl?.barcode }}</div>
       <div class="published">Disk: {{ vinyl?.discColor }}</div>
     </div>
-    <div :style="{ width: '40px', marginLeft: '10px' }" />
-    <button class="back-button" @click="$router.back()">
-      <img src="../assets/icons/back.png" />
-    </button>
   </section>
   <section class="button-container" :style="{ background: vinyl?.albumColors?.length ? vinyl.albumColors[0] + '25' : '#3b3b3b75' }" >
     <button
@@ -81,36 +78,22 @@ window.scrollTo(0, 0);
 
 <style scoped>
   section {
+    margin: 0 8px;
     margin-bottom: 16px;
-  }
-
-  .back-button {
-    width: 36px;
-    height: 36px;
-    position: absolute;
-    right: 0;
-    margin-top: -2px;
-    margin-right: 8px;
-    padding: 0;
-    background: none;
-  }
-
-  .back-button img {
-    width: 24px;
-    margin-top: 5px;
   }
 
   .vinyl-header {
     display: flex;
-    padding: 12px 8px 24px 8px;
-    margin: 0 -16px;
+    padding: 12px;
+    margin: 0;
   }
 
   .button-container {
     text-align: center;
     position: relative;
-    padding-bottom: 12px;
-    margin: 0 -16px 12px -16px;
+    padding-bottom: 8px;
+    margin: 0;
+    margin-bottom: 12px;
   }
 
   .line {

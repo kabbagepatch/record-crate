@@ -3,8 +3,8 @@ import type { Vinyl } from '../types';
 
 const props = defineProps<{
   vinyls: Vinyl[],
-  onVinylSelect?: any,
-  onAdd?: Function,
+  onVinylSelect?: (vinyl: Vinyl) => void,
+  onAdd?: (vinyl: Vinyl) => void,
 }>()
 
 const addClick = (e: PointerEvent, vinyl: Vinyl) => {

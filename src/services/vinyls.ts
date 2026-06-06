@@ -3,6 +3,11 @@ import type { DiscogsVinyl, Vinyl, VinylPlay } from '../types';
 import { getAuth } from 'firebase/auth';
 import { setupCache, type CacheAxiosResponse, type CachedStorageValue } from 'axios-cache-interceptor';
 
+const CACHE_KEYS = {
+  LIST_VINYLS: 'list-vinyls',
+  LIST_PLAYS: 'list-vinyl-plays',
+};
+
 const service = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
 });
@@ -16,7 +21,7 @@ setupCache(service);
 export const getVinyls = async () : Promise<Vinyl[]> => {
   try {
     // @ts-ignore
-    const response = await service.get('/vinyls', { id: 'list-vinyls' });
+    const response = await service.get('/vinyls', { id: CACHE_KEYS.LIST_VINYLS });
     const data = response.data;
     data.sort((a: any, b: any) => {
       if (a.favorite && !b.favorite) return -1;
@@ -39,7 +44,7 @@ export const createVinyl = async (discogsId: string | undefined) => {
     // @ts-ignore
     cache: {
       update: {
-        'list-vinyls': (listVinylsCache: CachedStorageValue,vinylResponse: CacheAxiosResponse) => {
+        [CACHE_KEYS.LIST_VINYLS]: (listVinylsCache: CachedStorageValue,vinylResponse: CacheAxiosResponse) => {
           if (listVinylsCache.state !== 'cached') return 'ignore';
           listVinylsCache.data.data = [vinylResponse.data].concat(listVinylsCache.data.data);
 
@@ -91,7 +96,7 @@ export const getDiscogsVinyl = async (discogsId: string) : Promise<Vinyl | undef
 export const getVinylActivity = async () : Promise<VinylPlay[]> => {
   try {
     // @ts-ignore
-    const response = await service.get('/vinyls/history', { id: 'list-vinyl-plays' });
+    const response = await service.get('/vinyls/history', { id: CACHE_KEYS.LIST_PLAYS });
     return response.data;
   } catch (e) {
     console.log(e);
@@ -104,7 +109,7 @@ export const playVinyl = async (id: string, data: { sides: number[] }) => {
     // @ts-ignore
     cache: {
       update: {
-        'list-vinyl-plays': (listPlaysCache: CachedStorageValue, playResponse: CacheAxiosResponse) => {
+        [CACHE_KEYS.LIST_PLAYS]: (listPlaysCache: CachedStorageValue, playResponse: CacheAxiosResponse) => {
           if (listPlaysCache.state !== 'cached') return 'ignore';
           listPlaysCache.data.data = [playResponse.data].concat(listPlaysCache.data.data);
 

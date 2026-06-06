@@ -1,24 +1,31 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 import VinylList from '../components/VinylList.vue';
 import VinylTiles from '../components/VinylTiles.vue';
-import NavBar from '../components/NavBar.vue';
 import { getVinyls } from '../services/vinyls';
 import type { Vinyl } from '../types';
 
 const vinyls = ref<Vinyl[]>([]);
+const loading = ref(false);
 let vinylData: Vinyl[] = [];
-getVinyls().then(data => {
-  vinyls.value = data
-  vinylData = ([] as Vinyl[]).concat(data);
+
+onMounted(async () => {
+  loading.value = true;
+  try {
+    const data = await getVinyls();
+    vinyls.value = data;
+    vinylData = ([] as Vinyl[]).concat(data);
+  } finally {
+    loading.value = false;
+  }
 });
 
 const search = ref('');
 const onSearch = () => {
   if (search.value)
     vinyls.value = vinylData.filter(v => (
-      v.album.toLowerCase().includes(search.value.toLowerCase()) 
+      v.album.toLowerCase().includes(search.value.toLowerCase())
       || v.artist.toLowerCase().includes(search.value.toLowerCase())
     ));
   else {
@@ -37,7 +44,7 @@ const toggleView = (v : 'tile' | 'list') => {
 <template>
   <div class="content">
     <div class="action-bar">
-      <input class="album-search" v-model="search" type="text" placeholder="Search catalog..." @input="onSearch" />
+      <input class="album-search" v-model="search" type="text" placeholder="Search crate..." @input="onSearch" :disabled="loading" />
       <button :class="`view-toggle ${view === 'tile' ? 'selected' : ''}`" @click="toggleView('tile')">
         <img class="icon" src="../assets/icons/catalog.png" />
       </button>
@@ -45,10 +52,10 @@ const toggleView = (v : 'tile' | 'list') => {
         <img class="icon" src="../assets/icons/list.png" />
       </button>
     </div>
-    <VinylList v-if="view == 'list'" :vinyls="vinyls" v-on:vinyl-select="(vinyl : any) => $router.push(`/catalog/${vinyl.id}`)" />
+    <div v-if="loading" class="loading">Loading...</div>
+    <VinylList v-else-if="view == 'list'" :vinyls="vinyls" v-on:vinyl-select="(vinyl : Vinyl) => $router.push(`/catalog/${vinyl.id}`)" />
     <VinylTiles v-else :vinyls="vinyls" />
   </div>
-  <NavBar />
 </template>
 
 <style scoped>
@@ -60,6 +67,12 @@ const toggleView = (v : 'tile' | 'list') => {
   .action-bar {
     display: flex;
     align-items: center;
+  }
+
+  .loading {
+    padding: 32px 0;
+    text-align: center;
+    color: #b3b3b3;
   }
 
   .album-search {

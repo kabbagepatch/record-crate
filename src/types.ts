@@ -31,6 +31,8 @@ export interface VinylPlay {
   artist: string,
   nSides: number,
   imageUrl: string,
+  timestamp: string,
+  albumColors?: string[],
 };
 
 export interface DiscogsVinyl {

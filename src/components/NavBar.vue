@@ -6,20 +6,12 @@ const router = useRouter();
 
 const showDropdown = ref(false);
 
-// const toggleDropdown = () => {
-//   showDropdown.value = !showDropdown.value;
-// };
-
 const close = (e : any) => {
   const className = e.target.classList[0];
   if (!className?.includes('add-button')) {
     showDropdown.value = false;
   }
 };
-
-const addActivity = () => {
-  router.push('/catalog');
-}
 
 const addToCatalog = () => {
   router.push('/catalog/add');
@@ -38,37 +30,32 @@ onBeforeUnmount(() => {
   <footer>
     <div class="tabs">
       <div
-        :class="'tab' + (!$route.path.includes('catalog') && !$route.path.includes('stats') ? ' selected' : '')"
+        :class="'tab' + ($route.path === '/' ? ' selected' : '')"
         @click="$router.push('/')"
       >
         <img class="icon" src="../assets/icons/vinyl.png" />
-        <span class="tab-name">Activity</span>
+        <span class="tab-name">Turntable</span>
       </div>
       <div
-        :class="'tab' + ($route.path.includes('stats') ? ' selected' : '')"
+        :class="'tab' + ($route.path === '/stats' ? ' selected' : '')"
         @click="$router.push('/stats')"
       >
         <img class="icon" src="../assets/icons/graph.png" />
         <span class="tab-name">Stats</span>
       </div>
       <div
-        :class="'tab' + ($route.path.includes('catalog') ? ' selected' : '')"
+        :class="'tab' + ($route.path.includes('/catalog') && !$route.path.includes('/catalog/add') ? ' selected' : '')"
         @click="$router.push('/catalog')"
       >
         <img class="icon" src="../assets/icons/vinyls.png" />
-        <span class="tab-name">Catalog</span>
+        <span class="tab-name">Crate</span>
       </div>
       <div :style="{ width: '410px', background: 'hsl(21, 42%, 11%)' }" />
       <div class="add-button-container">
-        <div v-if="showDropdown" class="dropdown">
-          <button class="option" @click="addActivity">Add Activity</button>
-          <button class="option" @click="addToCatalog">Add to Catalog</button>
-        </div>
         <button
-          class="add-button"
+          :class="'add-button' + ($route.path.includes('/catalog/add') ? ' add-button-selected' : '')"
           @click="addToCatalog"
-          >
-          <!-- @click="$router.push($route.path.includes('catalog') ? '/catalog/add' : '/catalog')" -->
+        >
           <img class="add-button-icon" src="../assets/icons/plus.png" />
         </button>
       </div>
@@ -82,7 +69,7 @@ onBeforeUnmount(() => {
     position: fixed;
     bottom: 0;
     left: 0;
-    height: 70px;
+    height: 72px;
     width: 100%;
   }
 
@@ -123,26 +110,6 @@ onBeforeUnmount(() => {
     margin-bottom: 10px;
   }
 
-  .dropdown {
-    width: 250px;
-    background-color: hsl(21, 42%, 11%);
-    padding: 10px;
-    margin-left: -200px;
-    margin-top: -110px;
-    position: fixed;
-    right: 40;
-    bottom: 40;
-    font-size: 18px;
-  }
-
-  .dropdown .option {
-    width: 100%;
-    text-align: left;
-    background-color: hsl(21, 42%, 4%);
-    padding: 10px 15px;
-    margin-top: 5px;
-  }
-
   .add-button-container {
     background-color: hsl(21, 42%, 11%);
     position: fixed;
@@ -164,6 +131,10 @@ onBeforeUnmount(() => {
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .add-button-selected {
+    border: 2px solid white;
   }
 
   .add-button-icon {

@@ -1,32 +1,43 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import NavBar from '../components/NavBar.vue';
+import { ref, onMounted } from 'vue'
 import { deleteVinylPlay, getVinylActivity } from '../services/vinyls';
+import type { VinylPlay } from '../types';
 
-let vinylActivity: any = ref([]);
+type ActivityItem = VinylPlay & { dateString: string; timeString: string; showTrash: boolean };
+
+const vinylActivity = ref<ActivityItem[]>([]);
+const loading = ref(false);
 
 const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' } as const;
 const timeOptions = { hour: 'numeric', minute: '2-digit' } as const;
-getVinylActivity().then(result => {
-  vinylActivity.value = result.map((a: any) => {
-    const date = new Date(a.timestamp);
-    return {
-      ...a,
-      dateString: date.toLocaleDateString('en-US', dateOptions),
-      timeString: date.toLocaleTimeString('en-US', timeOptions),
-      showTrash: false,
-    };
-  });
-})
 
-const deletePlay = async (row: any) => {
+onMounted(async () => {
+  loading.value = true;
+  try {
+    const result = await getVinylActivity();
+    vinylActivity.value = result.map((a) => {
+      const date = new Date(a.timestamp);
+      return {
+        ...a,
+        dateString: date.toLocaleDateString('en-US', dateOptions),
+        timeString: date.toLocaleTimeString('en-US', timeOptions),
+        showTrash: false,
+      };
+    });
+  } finally {
+    loading.value = false;
+  }
+});
+
+const deletePlay = async (row: ActivityItem) => {
   await deleteVinylPlay(row.vinylId, row.playId);
-  vinylActivity.value = vinylActivity.value.filter((a: any) => a.playId != row.playId);
+  vinylActivity.value = vinylActivity.value.filter((a) => a.playId !== row.playId);
 }
 
 </script>
 
 <template>
+  <div v-if="loading" class="loading">Loading...</div>
   <div class="plays">
     <div
       class="play-item"
@@ -39,7 +50,7 @@ const deletePlay = async (row: any) => {
         <div>
           <div class="album">
             <span class="album-name" :style="{ color: row?.albumColors?.length ? row.albumColors[0] : 'white' }">
-              {{ row.album.length > 27 ? row.album.slice(0, 25) + '..' : row.album }}
+              {{ row.album }}
             </span>
             <span class="album-sides" v-if="row.sides.length < row.nSides">
               {{ row.sides.join(', ') }}
@@ -61,12 +72,13 @@ const deletePlay = async (row: any) => {
       </div>
     </div>
   </div>
-  <NavBar />
 </template>
 
 <style scoped>
-  h2 {
-    margin-bottom: 16px;
+  .loading {
+    padding: 32px 0;
+    text-align: center;
+    color: #b3b3b3;
   }
 
   .icon-button {
@@ -78,11 +90,6 @@ const deletePlay = async (row: any) => {
 
   .plays {
     margin-bottom: 60px;
-  }
-
-  .vinyl-title {
-    width: 110px;
-    margin-left: 5px;
   }
 
   .play-item {
@@ -125,6 +132,11 @@ const deletePlay = async (row: any) => {
 
   .album-name {
     font-weight: bold;
+    max-width: 160px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
   }
 
   .album-sides {

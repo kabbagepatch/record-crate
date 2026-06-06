@@ -55,9 +55,10 @@ button:focus-visible {
 }
 
 .icon-button {
-  padding: 10px;
-  width: 40px;
-  height: 40px;
+  padding: 8px;
+  width: 36px;
+  height: 36px;
+  background: none;
 }
 
 .icon {
@@ -69,7 +70,7 @@ button:focus-visible {
 }
 
 #app {
-  padding: 1rem;
+  padding: 1rem 0.5rem;
   width: 100%;
   margin-bottom: 40px;
 }
