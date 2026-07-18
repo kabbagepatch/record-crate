@@ -55,7 +55,7 @@ const toggleView = (v : 'tile' | 'list') => {
       </button>
     </div>
     <div v-if="loading" class="loading">Loading...</div>
-    <VinylList v-else-if="view == 'list'" :vinyls="vinyls" v-on:vinyl-select="(vinyl : Vinyl) => $router.push(`/catalog/${vinyl.id}`)" />
+    <VinylList v-else-if="view == 'list'" :vinyls="vinyls" v-on:vinyl-select="(vinyl : Vinyl) => $router.push(`/crate/${vinyl.id}`)" />
     <VinylTiles v-else :vinyls="vinyls" />
   </div>
 </template>
@@ -74,7 +74,7 @@ const toggleView = (v : 'tile' | 'list') => {
   .loading {
     padding: 32px 0;
     text-align: center;
-    color: hsl(33, 25%, 62%);
+    color: var(--color-text-muted);
   }
 
   .album-search {
@@ -85,13 +85,19 @@ const toggleView = (v : 'tile' | 'list') => {
     font-size: 16px;
     border-radius: 20px;
     border: none;
-    background-color: hsl(27, 28%, 20%);
+    color: var(--color-text-muted);
+    background-color: var(--color-bg-deep);
+  }
+
+  .album-search::placeholder {
+    color: #e9edc9;
+    opacity: 1;
   }
 
   .view-toggle {
     height: 35px;
     padding: 10px 12px;
-    background-color: hsl(27, 28%, 20%);
+    background-color: var(--color-bg-deep);
   }
 
   .icon {
@@ -99,13 +105,13 @@ const toggleView = (v : 'tile' | 'list') => {
   }
 
   .view-toggle.selected {
-    background-color: hsl(27, 28%, 13%);
+    background-color: var(--color-bg-deeper);
   }
 
   .view-toggle:nth-of-type(1) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-    border-right: 1px solid rgb(236, 236, 236);
+    border-right: 1px solid var(--color-divider);
   }
 
   .view-toggle:nth-of-type(2) {

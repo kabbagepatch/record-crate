@@ -16,10 +16,10 @@ import VinylStats from './pages/VinylStats.vue';
 const routes = [
   { path: '/login', component: Login },
   { path: '/stats', component: VinylStats, meta: { requiresAuth: true }, },
-  { path: '/catalog', component: VinylCatalog, meta: { requiresAuth: true }, },
-  { path: '/catalog/add', component: SearchVinyl, meta: { requiresAuth: true }, },
-  { path: '/catalog/add/:id', component: AddVinyl, meta: { requiresAuth: true }, },
-  { path: '/catalog/:id', component: VinylPage, meta: { requiresAuth: true }, },
+  { path: '/crate', component: VinylCatalog, meta: { requiresAuth: true }, },
+  { path: '/crate/add', component: SearchVinyl, meta: { requiresAuth: true }, },
+  { path: '/crate/add/:id', component: AddVinyl, meta: { requiresAuth: true }, },
+  { path: '/crate/:id', component: VinylPage, meta: { requiresAuth: true }, },
   { path: '/', component: VinylActivity, meta: { requiresAuth: true }, },
 ]
 

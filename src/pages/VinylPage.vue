@@ -51,7 +51,7 @@ const deleteVinyl = async () => {
   if (confirm('Are you sure you want to delete this vinyl from your catalog?')) {
     try {
       await service.deleteVinyl(vinylId);
-      router.push('/catalog');
+      router.push('/crate');
     } catch(e : any) {
       alert(e.response.data);
     }
@@ -93,7 +93,7 @@ const playVinyl = async () => {
   .loading {
     padding: 32px 0;
     text-align: center;
-    color: hsl(33, 25%, 62%);
+    color: var(--color-text-muted);
   }
 
   .buttons {

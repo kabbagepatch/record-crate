@@ -14,7 +14,7 @@ const close = (e : any) => {
 };
 
 const addToCatalog = () => {
-  router.push('/catalog/add');
+  router.push('/crate/add');
 }
 
 onMounted(() => {
@@ -44,16 +44,16 @@ onBeforeUnmount(() => {
         <span class="tab-name">Stats</span>
       </div>
       <div
-        :class="'tab' + ($route.path.includes('/catalog') && !$route.path.includes('/catalog/add') ? ' selected' : '')"
-        @click="$router.push('/catalog')"
+        :class="'tab' + ($route.path.includes('/crate') && !$route.path.includes('/crate/add') ? ' selected' : '')"
+        @click="$router.push('/crate')"
       >
         <img class="icon" src="../assets/icons/vinyls.png" />
         <span class="tab-name">Crate</span>
       </div>
-      <div :style="{ width: '420px', background: 'hsl(21, 48%, 11%)' }" />
+      <div :style="{ width: '420px', background: 'var(--color-bg-deep)' }" />
       <div class="add-button-container">
         <button
-          :class="'add-button' + ($route.path.includes('/catalog/add') ? ' add-button-selected' : '')"
+          :class="'add-button' + ($route.path.includes('/crate/add') ? ' add-button-selected' : '')"
           @click="addToCatalog"
         >
           <img class="add-button-icon" src="../assets/icons/plus.png" />
@@ -65,7 +65,8 @@ onBeforeUnmount(() => {
 
 <style scoped>
   footer {
-    background-color: hsl(21, 48%, 11%);
+    background-color: var(--color-bg-deep);
+    color: var(--color-white);
     position: fixed;
     bottom: 0;
     left: 0;
@@ -81,21 +82,21 @@ onBeforeUnmount(() => {
     width: 100%;
     text-align: center;
     padding-top: 10px;
-    background-color: hsl(21, 48%, 11%);
+    background-color: var(--color-bg-deep);
     font-size: 16px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 2px;
-    border-top: 1px solid #ece0d1;
+    border-top: 1px solid var(--color-bg-deeper);
   }
   
   .selected {
     font-weight: bold;
-    background-color: hsl(21, 48%, 6%);
+    background-color: var(--color-bg-deeper);
     height: 70px;
-    margin-top: -10px;
+    margin-top: -8px;
   }
   
   .icon {
@@ -111,7 +112,7 @@ onBeforeUnmount(() => {
   }
 
   .add-button-container {
-    background-color: hsl(21, 48%, 11%);
+    background-color: var(--color-bg-deep);
     position: fixed;
     right: 0;
     bottom: 0;
@@ -121,7 +122,7 @@ onBeforeUnmount(() => {
   }
 
   .add-button {
-    background-color: hsl(21, 48%, 4%);
+    background-color: var(--color-bg-deeper);
     border-radius: 50%;
     width: 85px;
     height: 85px;
@@ -134,7 +135,7 @@ onBeforeUnmount(() => {
   }
 
   .add-button-selected {
-    border: 2px solid white;
+    border: 2px solid var(--color-white);
   }
 
   .add-button-icon {

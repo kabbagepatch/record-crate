@@ -24,14 +24,14 @@ const selectClick = (vinyl: Vinyl) => {
       class="album-item"
       v-for="vinyl in vinyls"
       @click="selectClick(vinyl)"
-      :style="{ backgroundColor: vinyl?.albumColors?.length ? vinyl.albumColors[0] + '30' : 'hsl(27, 28%, 20%)' }"
+      :style="{ backgroundColor: vinyl?.albumColors?.length ? vinyl.albumColors[0] + '70' : 'var(--color-tile-deep)' }"
     >
       <div class="album-info">
         <img v-if="vinyl.imageUrl" class="album-art" :src="vinyl.imageUrl" :alt="vinyl.album">
-        <div v-else class="album-art" :style="{ backgroundColor: 'black' }" />
+        <div v-else class="album-art" :style="{ backgroundColor: 'var(--color-black)' }" />
         <div class="album-name">
           <div class="album">{{ vinyl.album }}</div>
-          <div class="artist" :style="{ color: vinyl?.albumColors?.length ? vinyl.albumColors[0] : 'white', }">{{ vinyl.artist }}</div>
+          <div class="artist">{{ vinyl.artist }}</div>
         </div>
       </div>
       <div v-if="vinyl.favorite" class="icon-container"><img class="icon" src="../assets/icons/heart-filled.png" /></div>
@@ -49,7 +49,7 @@ const selectClick = (vinyl: Vinyl) => {
   }
 
   .album-item {
-    background-color: hsl(25, 25%, 18%);
+    background-color: var(--color-tile);
     padding: 6px;
     border-radius: 5px;
     display: flex;
@@ -68,8 +68,13 @@ const selectClick = (vinyl: Vinyl) => {
     height: 50px;
   }
 
+  .album {
+    font-weight: bold;
+    line-height: 1.2em;
+  }
+
   .artist {
-    color: hsl(33, 20%, 72%);
+    color: var(--color-text-subtle);
     font-size: 15px;
   }
 

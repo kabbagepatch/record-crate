@@ -62,8 +62,8 @@ const deletePlay = async (row: ActivityItem) => {
   <div v-if="nowPlaying">
     <div
       class="now-playing"
-      :style="{ backgroundColor: nowPlaying.albumColors?.length ? nowPlaying.albumColors[0] + '30' : 'hsl(25, 25%, 18%)' }"
-      @click="$router.push(`/catalog/${nowPlaying.vinylId}`)"
+      :style="{ backgroundColor: nowPlaying.albumColors?.length ? nowPlaying.albumColors[0] + '80' : 'var(--color-tile)' }"
+      @click="$router.push(`/crate/${nowPlaying.vinylId}`)"
     >
       <div class="now-playing-label">
         <div>Now Playing</div>
@@ -73,28 +73,14 @@ const deletePlay = async (row: ActivityItem) => {
       </div>
       <div class="now-playing-body">
         <img class="now-playing-art" :src="nowPlaying.imageUrl" :alt="nowPlaying.album" />
-        <div
-          class="vinyl-disc"
-          :style="{
-            backgroundColor: nowPlaying.albumColors?.[0] ?? 'hsl(33, 25%, 72%)',
-            background: nowPlaying.albumColors?.length
-              ? `radial-gradient(
-                  circle at top center,
-                  ${nowPlaying.albumColors[0]}80 40%,
-                  ${nowPlaying.albumColors[0]}30 95%,
-                  hsl(25, 25%, 18%) 100%
-                )`
-              : `radial-gradient(
-                  circle at top center,
-                  hsl(25, 25%, 28%) 0%,
-                  hsl(25, 25%, 18%) 100%
-                )`,
-          }"
-        >
-          <div class="vinyl-disc-name">{{ nowPlaying.album }}</div>
+        <div class="vinyl-disc">
+          <div
+            class="vinyl-disc-name"
+            :style="{ backgroundColor: nowPlaying.albumColors?.[0] ?? 'var(--color-tile-deep)' }"
+          >{{ nowPlaying.album }}</div>
         </div>
         <div class="now-playing-info">
-          <div class="now-playing-album" :style="{ color: nowPlaying.albumColors?.length ? nowPlaying.albumColors[0] : 'white' }">
+          <div class="now-playing-album">
             {{ nowPlaying.album }}
           </div>
           <div class="now-playing-artist">{{ nowPlaying.artist }}</div>
@@ -107,14 +93,14 @@ const deletePlay = async (row: ActivityItem) => {
     <div
       class="play-item"
       v-for="row in historyItems"
-      :style="{ backgroundColor: row?.albumColors?.length ? row.albumColors[0] + '30' : 'hsl(25, 25%, 18%)' }"
+      :style="{ backgroundColor: row?.albumColors?.length ? row.albumColors[0] + '70' : 'var(--color-tile)' }"
       @click="row.showTrash=!row.showTrash"
     >
-      <div class="album-info" @click="$router.push(`/catalog/${row.vinylId}`)">
+      <div class="album-info" @click="$router.push(`/crate/${row.vinylId}`)">
         <img class="album-art" :src="row.imageUrl" :alt="row.album">
-        <div>
+        <div class="album-text">
           <div class="album">
-            <span class="album-name" :style="{ color: row?.albumColors?.length ? row.albumColors[0] : 'white' }">
+            <span class="album-name">
               {{ row.album }}
             </span>
             <span class="album-sides" v-if="row.sides.length < row.nSides">
@@ -143,7 +129,7 @@ const deletePlay = async (row: ActivityItem) => {
   .loading {
     padding: 32px 0;
     text-align: center;
-    color: hsl(33, 25%, 72%);
+    color: var(--color-text-subtle);
   }
 
   .icon-button {
@@ -158,6 +144,7 @@ const deletePlay = async (row: ActivityItem) => {
     margin-bottom: 8px;
     border-radius: 4px;
     cursor: pointer;
+    background-color: var(--color-tile);
   }
 
   .now-playing-label {
@@ -167,7 +154,7 @@ const deletePlay = async (row: ActivityItem) => {
     font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: hsl(33, 25%, 72%);
+    color: var(--color-text-subtle);
     margin-bottom: 6px;
   }
   
@@ -192,22 +179,33 @@ const deletePlay = async (row: ActivityItem) => {
     height: 88px;
     border-radius: 50%;
     flex-shrink: 0;
-    margin-left: -60px;
+    margin-left: -64px;
     display: flex;
     align-items: center;
     justify-content: center;
     animation: spin 3s linear infinite;
+    background:
+      conic-gradient(from 0deg,
+        hsla(0, 0%, 100%, 0) 0deg,
+        hsla(0, 0%, 100%, 0.22) 20deg,
+        hsla(0, 0%, 100%, 0) 55deg,
+        hsla(0, 0%, 100%, 0) 360deg),
+      repeating-radial-gradient(circle at center,
+        hsl(0, 0%, 8%) 0 2px,
+        hsl(0, 0%, 14%) 2px 4px),
+      hsl(0, 0%, 10%);
+    box-shadow: 0 1px 3px hsla(0, 0%, 0%, 0.35);
   }
 
   .vinyl-disc-name {
     border-radius: 50%;
-    background-color: black;
     width: 30px;
     height: 30px;
     font-size: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 0 0 2px hsl(0, 0%, 6%);
   }
 
   @keyframes spin {
@@ -239,12 +237,12 @@ const deletePlay = async (row: ActivityItem) => {
   }
 
   .now-playing-artist {
-    color: hsl(33, 20%, 72%);
+    color: var(--color-text-subtle);
     font-size: 15px;
   }
 
   .now-playing-sides {
-    color: hsl(33, 25%, 72%);
+    color: var(--color-text-subtle);
     font-size: 13px;
   }
 
@@ -260,7 +258,7 @@ const deletePlay = async (row: ActivityItem) => {
     padding-right: 8px;
     align-items: center;
     justify-content: space-between;
-    background-color: hsl(25, 25%, 18%);
+    background-color: var(--color-tile);
     margin-bottom: 8px;
     cursor: pointer;
   }
@@ -270,6 +268,8 @@ const deletePlay = async (row: ActivityItem) => {
     justify-content: space-between;
     flex-direction: row;
     gap: 10px;
+    min-width: 80px;
+    flex-shrink: 0;
   }
 
   .album-info {
@@ -278,36 +278,49 @@ const deletePlay = async (row: ActivityItem) => {
     align-items: center;
     gap: 8px;
     cursor: pointer;
+    flex: 1;
+    min-width: 0;
   }
 
   .album-art {
+    width: 50px;
     height: 50px;
+    flex-shrink: 0;
+  }
+
+  .album-text {
+    min-width: 0;
   }
 
   .album {
     display: flex;
     align-items: center;
     gap: 5px;
+    min-width: 0;
   }
 
   .album-name {
     font-weight: bold;
-    max-width: 180px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    display: inline-block;
+    min-width: 0;
     line-height: 1.4;
   }
 
   .album-sides {
-    color: hsl(33, 25%, 72%);
+    color: var(--color-text-subtle);
     font-size: 14px;
+    flex-shrink: 0;
+    white-space: nowrap;
   }
 
   .artist {
-    color: hsl(33, 20%, 72%);
+    color: var(--color-text-subtle);
     font-size: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .date, .time {
@@ -317,7 +330,7 @@ const deletePlay = async (row: ActivityItem) => {
   }
 
   .time {
-    color: hsl(33, 25%, 72%);
+    color: var(--color-text-subtle);
     font-size: 14px;
   }
 </style>

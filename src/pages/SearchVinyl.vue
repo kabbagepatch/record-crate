@@ -9,7 +9,7 @@ const router = useRouter();
 const route = useRoute();
 
 const selectVinyl = (vinyl: Vinyl) => {
-  router.push(`/catalog/add/${vinyl.discogsId}`);
+  router.push(`/crate/add/${vinyl.discogsId}`);
 }
 
 const results = ref<Vinyl[]>([]);
@@ -44,10 +44,10 @@ const searchAlbum = async (getCatalog = false) => {
 const onSearch = () => {
   if (search.value) {
     searchAlbum();
-    router.replace(`/catalog/add?search=${search.value}`)
+    router.replace(`/crate/add?search=${search.value}`)
   } else {
     results.value = [];
-    router.replace('/catalog/add')
+    router.replace('/crate/add')
   }
 }
 
@@ -92,7 +92,7 @@ onMounted(() => searchAlbum(true));
     font-size: 14px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: hsl(33, 25%, 62%);
+    color: var(--color-text-muted);
     margin: 10px 0 0 0;
     font-weight: normal;
   }
@@ -125,7 +125,7 @@ onMounted(() => searchAlbum(true));
     border: none;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-    background-color: hsl(27, 15%, 19%);
+    background-color: var(--color-tile);
   }
 
   .search-button {
@@ -139,6 +139,6 @@ onMounted(() => searchAlbum(true));
   .loading {
     padding: 32px 0;
     text-align: center;
-    color: #b3b3b3;
+    color: var(--color-text);
   }
 </style>

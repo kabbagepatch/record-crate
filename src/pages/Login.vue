@@ -99,7 +99,7 @@ const fieldUpdate = () => {
     padding: 0 15px;
     font-size: 16px;
     border-radius: 8px;
-    border: 1px solid white;
+    border: 1px solid var(--color-white);
   }
 
   button.submit {
@@ -114,6 +114,6 @@ const fieldUpdate = () => {
   }
 
   p.error {
-    color: red;
+    color: var(--color-error);
   }
 </style>

@@ -46,7 +46,7 @@ const modalClick = (e: any) => {
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: var(--color-overlay);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -54,8 +54,8 @@ const modalClick = (e: any) => {
 }
 
 .modal {
-  background-color: hsl(25, 45%, 10%);
-  box-shadow: 2px 2px 5px 1px black;
+  background-color: var(--color-bg);
+  box-shadow: 2px 2px 5px 1px var(--color-black);
   overflow-x: auto;
   display: flex;
   flex-direction: column;

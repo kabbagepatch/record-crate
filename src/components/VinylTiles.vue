@@ -12,17 +12,15 @@ defineProps<{
   <div class="albums">
     <div
       class="album-tile"
-      :style="{ backgroundColor: vinyl?.albumColors?.length ? vinyl.albumColors[0] + '30' : 'hsl(25, 25%, 18%)' }"
+      :style="{ backgroundColor: vinyl?.albumColors?.length ? vinyl.albumColors[0] + '90' : 'var(--color-tile)' }"
       v-for="vinyl in vinyls"
-      @click="$router.push(`/catalog/${vinyl.id}`)"
+      @click="$router.push(`/crate/${vinyl.id}`)"
     >
       <img v-if="vinyl.imageUrl" class="album-art" :src="vinyl.imageUrl" :alt="vinyl.album">
-      <div v-else class="album-art" :style="{ marginBottom: '10px', backgroundColor: 'black' }" />
+      <div v-else class="album-art" :style="{ marginBottom: '10px', backgroundColor: 'var(--color-black)' }" />
       <div v-if="vinyl.favorite" class="icon-container"><img class="icon" src="../assets/icons/heart-filled.png" /></div>
       <div class="album">{{ vinyl.album }}</div>
-      <div class="artist" :style="{ color: vinyl?.albumColors?.length ? vinyl.albumColors[0] : 'white', }">
-        {{ vinyl.artist }}
-      </div>
+      <div class="artist">{{ vinyl.artist }}</div>
     </div>
   </div>
 </template>
@@ -41,7 +39,7 @@ defineProps<{
     position: relative;
     width: 105px;
     height: 160px;
-    background-color: hsl(25, 25%, 18%);
+    background-color: var(--color-tile);
     padding: 6px 8px;
     border-radius: 5px;
     cursor: pointer;
@@ -49,7 +47,7 @@ defineProps<{
   }
 
   .album-tile:hover {
-    box-shadow: 0 0 3px hsl(33, 30%, 75%), 0 0 2px hsl(33, 25%, 60%);
+    box-shadow: 0 0 3px var(--color-text-subtle), 0 0 2px var(--color-text-muted);
   }
 
   .album-art {
@@ -63,10 +61,11 @@ defineProps<{
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.4em;
   }
 
   .artist {
-    color: hsl(33, 20%, 72%);
+    color: var(--color-text-subtle);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

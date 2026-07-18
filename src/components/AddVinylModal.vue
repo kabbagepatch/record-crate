@@ -13,7 +13,7 @@ const props = defineProps<{
 const album = ref(props.selectedVinyl.album || '');
 const artist = ref(props.selectedVinyl.artist || '');
 const nSides = ref(props.selectedVinyl.nSides || '2');
-const discColor = ref(props.selectedVinyl.discColor || '#000000');
+const discColor = ref(props.selectedVinyl.albumColors?.[0] || '#000000');
 
 const vinyl: any = ref({});
 if (props.selectedVinyl.discogsId) {
@@ -69,7 +69,6 @@ if (props.selectedVinyl.discogsId) {
         <!-- <div class="modal-input-container">
           <label for="disc-color">Disc Color</label>
           <input
-            :style="{ background: 'black' }"
             id="disc-color"
             class="modal-input"
             v-model="discColor"
@@ -107,10 +106,15 @@ if (props.selectedVinyl.discogsId) {
     flex-direction: column;
   }
 
+  label {
+    min-width: 50px;
+  }
+
   .modal-input {
     margin: 6px;
     border-radius: 20px;
     border: none;
+    background-color: var(--color-bg-deeper);
   }
 
   #album, #artist {
@@ -119,7 +123,7 @@ if (props.selectedVinyl.discogsId) {
   }
 
   #n-sides {
-    padding: 8px 14px;
+    padding: 8px 12px;
     width: 12px;
   }
 
@@ -131,6 +135,6 @@ if (props.selectedVinyl.discogsId) {
   }
 
   .add-button {
-    border: 1px solid white;
+    border: 1px solid var(--color-white);
   }
 </style>

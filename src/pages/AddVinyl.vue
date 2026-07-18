@@ -26,7 +26,7 @@ const onAddVinyl = async () => {
 
   try {
     await service.createVinyl(vinyl.value.discogsId);
-    router.push('/catalog');
+    router.push('/crate');
   } catch (e) {
     console.log(e);
   }

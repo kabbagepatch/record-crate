@@ -13,22 +13,22 @@ onMounted(() => window.scrollTo(0, 0));
 </script>
 
 <template>
-  <section class="vinyl-header" :style="{ background: vinyl?.albumColors?.length ? vinyl.albumColors[0] + '25' : 'hsla(25, 28%, 22%, 0.46)' }" >
+  <section class="vinyl-header" :style="{ background: vinyl?.albumColors?.length ? vinyl.albumColors[0] + '75' : 'var(--color-tile-veil)' }" >
     <img class="vinyl-art" v-if="vinyl?.imageUrl" :src="vinyl?.imageUrl" :alt="vinyl?.album" />
     <div class="vinyl-art" v-else />
     <div class="vinyl-details">
       <h2 v-if="vinyl?.album" class="album">{{ vinyl?.album }}</h2>
       <h2 v-else class="album">Loading...</h2>
-      <h3 class="artist" :style="{ color: vinyl?.albumColors?.length ? vinyl.albumColors[0] : 'white', }">{{ vinyl?.artist }}</h3>
+      <h3 class="artist">{{ vinyl?.artist }}</h3>
       <div class="published">Released: {{ vinyl?.published }}</div>
       <div v-if="vinyl?.barcode" class="published">Bar Code: {{ vinyl?.barcode }}</div>
       <div class="published">Disk: {{ vinyl?.discColor }}</div>
     </div>
   </section>
-  <section class="button-container" :style="{ background: vinyl?.albumColors?.length ? vinyl.albumColors[0] + '25' : 'hsla(25, 28%, 22%, 0.46)' }" >
+  <section class="button-container" :style="{ background: vinyl?.albumColors?.length ? vinyl.albumColors[0] + '75' : 'var(--color-tile-veil)' }" >
     <button
       v-if="onPlay"
-      :style="{ background: vinyl?.albumColors?.length ? vinyl.albumColors[0] : 'white' }"
+      :style="{ background: vinyl?.albumColors?.length ? vinyl.albumColors[0] : 'var(--color-white)' }"
       class="play-button"
       @click="onPlay"
     >
@@ -36,13 +36,13 @@ onMounted(() => window.scrollTo(0, 0));
     </button>
     <button
       v-if="onAdd"
-      :style="{ background: vinyl?.albumColors?.length ? vinyl.albumColors[0] : 'white' }"
+      :style="{ background: vinyl?.albumColors?.length ? vinyl.albumColors[0] : 'var(--color-white)' }"
       class="play-button"
       @click="onAdd"
     >
       + Add To Catalog
     </button>
-    <hr class="line" :style="{ borderColor: vinyl?.albumColors?.length ? vinyl.albumColors[0] : 'white' }" />
+    <hr class="line" :style="{ borderColor: vinyl?.albumColors?.length ? vinyl.albumColors[0] : 'var(--color-white)' }" />
   </section>
   <section>
     <h3 class="subheader">Genres</h3>
@@ -50,10 +50,7 @@ onMounted(() => window.scrollTo(0, 0));
       <div v-for="tag in vinyl?.genres">
         <div
           class="tag"
-          :style="{
-            color: vinyl?.albumColors?.length ? vinyl.albumColors[0] : 'white',
-            borderColor: vinyl?.albumColors?.length ? vinyl.albumColors[0] : 'white'
-          }"
+          :style="{ background: vinyl?.albumColors?.length ? vinyl.albumColors[0] : 'var(--color-white)' }"
         >{{ tag }}</div>
       </div>
     </div>
@@ -63,8 +60,8 @@ onMounted(() => window.scrollTo(0, 0));
     <div class="tracks">
       <div v-for="(track) in vinyl?.tracks">
         <div class="track">
-          <span class="track-index" :style="{ color: vinyl?.albumColors?.length ? vinyl.albumColors[0] : 'white', }">
-            {{ track.position }}.
+          <span class="track-index" :style="{ borderColor: vinyl?.albumColors?.length ? vinyl.albumColors[0] : 'var(--color-white)', }">
+            {{ track.position }}
           </span>
           <span>
             {{ track.title }}
@@ -104,7 +101,7 @@ onMounted(() => window.scrollTo(0, 0));
   }
   
   .play-button {
-    color: black;
+    color: var(--color-black);
     font-size: 22px;
     padding: 4px 20px;
     padding-top: 2px;
@@ -123,15 +120,14 @@ onMounted(() => window.scrollTo(0, 0));
 
   .album, .artist {
     margin: 0;
-    line-height: 1.3em;
   }
 
   .artist {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
 
   .published {
-    color: hsl(33, 25%, 62%)
+    color: var(--color-text-muted)
   }
 
   .tags {
@@ -146,13 +142,23 @@ onMounted(() => window.scrollTo(0, 0));
   }
 
   .tag {
-    border: 1px solid white;
+    border: 1px solid var(--color-white);
     font-size: 14px;
     padding: 0 12px;
     border-radius: 16px;
   }
 
   .track-index {
-    margin-right: 4px;
+    display: inline-flex;
+    font-size: 12px;
+    width: 16px;
+    height: 16px;
+    padding: 1px;
+    margin: 1px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-right: 6px;
+    border: 2px solid white;
   }
 </style>

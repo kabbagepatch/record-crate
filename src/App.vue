@@ -21,15 +21,15 @@ const onLogout = async () => {
 
 <template>
   <div class="header">
-    <a href="/" :style="{ color: 'white' }">
+    <a href="/" :style="{ color: 'var(--color-white)' }">
       <div class="title">
         <img :style="{ width: '32px', height: '32px' }" src="./assets/vinyl.png" />
-        <h1>Record Crate</h1>
+        <h1>{{ $route.path === '/' ? 'Turntable' : `${$route.path[1]?.toLocaleUpperCase()}${$route.path.split('/')[1]?.slice(1)}`}}</h1>
       </div>
     </a>
     
     <div class="icon-buttons" v-if="userLoaded && currentUser">
-      <button v-if="$route.path.includes('/catalog/')" class="icon-button" @click="$router.back()">
+      <button v-if="$route.path.includes('/crate/')" class="icon-button" @click="$router.back()">
         <img class="icon" src="./assets/icons/back.png" />
       </button>
       <button class="icon-button" @click="onLogout">
@@ -51,7 +51,7 @@ const onLogout = async () => {
     justify-content: space-between;
     padding: 0.75rem;
     height: 36px;
-    background-color: hsl(21, 48%, 6%);
+    background-color: var(--color-bg-deeper);
   }
 
   .title {

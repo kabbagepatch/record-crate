@@ -140,17 +140,12 @@ const barHeight = (count: number, max: number) =>
       <div
         v-for="vinyl in mostPlayedVinyls"
         class="top-item-card"
-        :style="{ backgroundColor: vinyl.play.albumColors?.length ? vinyl.play.albumColors[0] + '25' : 'hsl(25, 25%, 18%)' }"
-        @click="$router.push(`/catalog/${vinyl.play.vinylId}`)"
+        :style="{ backgroundColor: vinyl.play.albumColors?.length ? vinyl.play.albumColors[0] + '75' : 'var(--color-tile)' }"
+        @click="$router.push(`/crate/${vinyl.play.vinylId}`)"
       >
         <img class="top-item-art" :src="vinyl.play.imageUrl" :alt="vinyl.play.album" />
         <div class="top-item-info">
-          <div
-            class="top-item-name"
-            :style="{ color: vinyl.play.albumColors?.length ? vinyl.play.albumColors[0] : 'white' }"
-          >
-            {{ vinyl.play.album }}
-          </div>
+          <div class="top-item-name">{{ vinyl.play.album }}</div>
           <div class="top-item-sub">{{ vinyl.play.artist }}</div>
           <div class="top-item-count">{{ vinyl.count }} plays</div>
         </div>
@@ -175,7 +170,7 @@ const barHeight = (count: number, max: number) =>
   .loading {
     padding: 32px 0;
     text-align: center;
-    color: hsl(33, 25%, 62%);
+    color: var(--color-text-muted);
   }
 
   .stats {
@@ -190,7 +185,7 @@ const barHeight = (count: number, max: number) =>
   }
 
   .chip {
-    background-color: hsl(25, 25%, 18%);
+    background-color: var(--color-bg-deep);
     border-radius: 12px;
     padding: 10px 16px;
     display: flex;
@@ -209,7 +204,7 @@ const barHeight = (count: number, max: number) =>
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: hsl(33, 25%, 62%);
+    color: var(--color-text-muted);
   }
 
   .section {
@@ -220,7 +215,7 @@ const barHeight = (count: number, max: number) =>
     font-size: 16px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: hsl(33, 25%, 62%);
+    color: var(--color-text-muted);
     margin: 0 0 10px 0;
     font-weight: normal;
   }
@@ -244,24 +239,24 @@ const barHeight = (count: number, max: number) =>
 
   .bar-count {
     font-size: 9px;
-    color: hsl(33, 25%, 62%);
+    color: var(--color-text-muted);
     line-height: 1;
   }
 
   .bar {
     width: 100%;
-    background-color: hsl(33, 30%, 32%);
+    background-color: var(--color-tile);
     border-radius: 2px 2px 0 0;
     min-height: 2px;
   }
 
   .bar-active {
-    background-color: hsl(33, 45%, 50%);
+    background-color: var(--color-tile-deep);
   }
 
   .bar-label {
     font-size: 9px;
-    color: hsl(33, 20%, 55%);
+    color: var(--color-text-muted);
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
@@ -280,7 +275,7 @@ const barHeight = (count: number, max: number) =>
   }
 
   .top-item-card-flat {
-    background-color: hsl(25, 25%, 18%);
+    background-color: var(--color-tile-hi);
     cursor: default;
   }
 
@@ -302,15 +297,17 @@ const barHeight = (count: number, max: number) =>
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.4em;
   }
 
   .top-item-sub {
     font-size: 14px;
-    color: hsl(33, 20%, 72%);
+    color: var(--color-text-subtle);
+    line-height: 1.3em;
   }
 
   .top-item-count {
     font-size: 13px;
-    color: hsl(33, 25%, 62%);
+    color: var(--color-text-muted);
   }
 </style>
