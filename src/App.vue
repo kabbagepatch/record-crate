@@ -50,7 +50,7 @@ const onLogout = async () => {
     align-items: center;
     justify-content: space-between;
     padding: 0.75rem;
-    height: 36px;
+    height: 40px;
     background-color: var(--color-bg-deeper);
   }
 

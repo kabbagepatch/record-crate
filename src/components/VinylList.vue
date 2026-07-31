@@ -24,7 +24,7 @@ const selectClick = (vinyl: Vinyl) => {
       class="album-item"
       v-for="vinyl in vinyls"
       @click="selectClick(vinyl)"
-      :style="{ backgroundColor: vinyl?.albumColors?.length ? vinyl.albumColors[0] + '70' : 'var(--color-tile-deep)' }"
+      :style="{ backgroundColor: vinyl?.albumColors?.length ? vinyl.albumColors[0] + '70' : 'var(--color-tile-hi)' }"
     >
       <div class="album-info">
         <img v-if="vinyl.imageUrl" class="album-art" :src="vinyl.imageUrl" :alt="vinyl.album">

@@ -80,13 +80,13 @@ const toggleView = (v : 'tile' | 'list') => {
   .album-search {
     width: 100%;
     margin: 8px 0;
-    margin-right: 5px;
     padding: 8px 16px;
     font-size: 16px;
     border-radius: 20px;
     border: none;
-    color: var(--color-text-muted);
     background-color: var(--color-bg-deep);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
   }
 
   .album-search::placeholder {
@@ -109,9 +109,9 @@ const toggleView = (v : 'tile' | 'list') => {
   }
 
   .view-toggle:nth-of-type(1) {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+    border-radius: 0;
     border-right: 1px solid var(--color-divider);
+    border-left: 1px solid var(--color-divider);
   }
 
   .view-toggle:nth-of-type(2) {

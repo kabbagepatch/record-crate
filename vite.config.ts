@@ -17,7 +17,20 @@ export default defineConfig({
       name: 'Record Crate',
       short_name: 'Records',
       description: 'Track your Vinyl Activity and Catalog',
-      theme_color: '#201409',
+      theme_color: '#e2c6a7',
+      background_color: '#e2c6a7',
+      icons: [
+        {
+          src: 'public/icon-192x192.png',
+          sizes: '192x192',
+          type: 'image/png'
+        },
+        {
+          src: 'public/icon-512x512.png',
+          sizes: '512x512',
+          type: 'image/png'
+        }
+      ]
     },
 
     workbox: {

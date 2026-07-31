@@ -100,6 +100,7 @@ const fieldUpdate = () => {
     font-size: 16px;
     border-radius: 8px;
     border: 1px solid var(--color-white);
+    background-color: var(--color-bg-deeper);
   }
 
   button.submit {

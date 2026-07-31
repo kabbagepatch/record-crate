@@ -76,7 +76,7 @@ const deletePlay = async (row: ActivityItem) => {
         <div class="vinyl-disc">
           <div
             class="vinyl-disc-name"
-            :style="{ backgroundColor: nowPlaying.albumColors?.[0] ?? 'var(--color-tile-deep)' }"
+            :style="{ backgroundColor: nowPlaying.albumColors?.[0] ?? 'var(--color-tile-hi)' }"
           >{{ nowPlaying.album }}</div>
         </div>
         <div class="now-playing-info">

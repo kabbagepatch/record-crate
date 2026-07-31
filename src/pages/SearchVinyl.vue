@@ -119,13 +119,19 @@ onMounted(() => searchAlbum(true));
   .album-search {
     margin: 8px 0;
     width: calc(100% - 16px);
-    padding: 8px 16px;
+    padding: 10px 16px;
+    height: 20px;
     font-size: 16px;
     border-radius: 20px;
     border: none;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-    background-color: var(--color-tile);
+    background-color: var(--color-bg-deep);
+  }
+
+  .album-search::placeholder {
+    color: #e9edc9;
+    opacity: 1;
   }
 
   .search-button {
@@ -134,6 +140,7 @@ onMounted(() => searchAlbum(true));
     padding: 8px;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+    background-color: var(--color-bg-deeper);
   }
 
   .loading {
