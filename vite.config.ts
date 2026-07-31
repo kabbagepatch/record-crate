@@ -21,23 +21,36 @@ export default defineConfig({
       background_color: '#e2c6a7',
       icons: [
         {
+          src: '/icon-transparent.png',
+          sizes: '64x64',
+          type: 'image/png',
+        },
+        {
           src: '/icon-192x192.png',
           sizes: '192x192',
-          type: 'image/png'
+          type: 'image/png',
+          purpose: 'any',
         },
         {
           src: '/icon-512x512.png',
           sizes: '512x512',
-          type: 'image/png'
-        }
+          type: 'image/png',
+          purpose: 'any',
+        },
+        {
+          src: '/icon-512x512-small.png',
+          sizes: '512x512',
+          type: 'image/png',
+          purpose: 'maskable',
+        },
       ],
       "screenshots": [
         {
           "src": "screenshot-mobile.png",
-          "sizes": "1080x2144",
+          "sizes": "1080x2152",
           "type": "image/png",
-          "label": "App view on mobile phone"
-        },
+          "label": "Record Crate"
+        }
       ]
     },
 

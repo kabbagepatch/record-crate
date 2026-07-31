@@ -30,7 +30,7 @@ onBeforeUnmount(() => {
   <footer>
     <div class="tabs">
       <div
-        :class="'tab' + ($route.path === '/' ? ' selected' : '')"
+        :class="'tab' + ($route.path.match(/^\/\d*$/) ? ' selected' : '')"
         @click="$router.push('/')"
       >
         <img class="icon" src="../assets/icons/vinyls.png" />

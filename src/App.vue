@@ -23,13 +23,13 @@ const onLogout = async () => {
   <div class="header">
     <a href="/" :style="{ color: 'var(--color-white)' }">
       <div class="title">
-        <img :style="{ width: '32px', height: '32px' }" src="./assets/vinyl.png" />
-        <h1>{{ $route.path === '/' ? 'Record Crate' : ($route.path.includes('/activity') ? 'Turntable Activity' : 'Vinyl Stats') }}</h1>
+        <img :style="{ width: '36px', height: '36px' }" src="./assets/vinyl.png" />
+        <h1>{{ $route.path.match(/^\/\d*$/) ? 'Record Crate' : ($route.path.includes('/activity') ? 'Turntable Activity' : 'Vinyl Stats') }}</h1>
       </div>
     </a>
     
     <div class="icon-buttons" v-if="userLoaded && currentUser">
-      <button v-if="$route.path.includes('/activity/')" class="icon-button" @click="$router.back()">
+      <button v-if="$route.path !== '/'" class="icon-button" @click="$router.back()">
         <img class="icon" src="./assets/icons/back.png" />
       </button>
       <button class="icon-button" @click="onLogout">
@@ -49,8 +49,8 @@ const onLogout = async () => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.75rem;
-    height: 40px;
+    padding: 10px 12px;
+    height: 44px;
     background-color: var(--color-bg-deeper);
   }
 
@@ -61,7 +61,7 @@ const onLogout = async () => {
   }
 
   .title h1 {
-    font-size: 28px;
+    font-size: 24px;
   }
 
   .icon-button {
