@@ -141,7 +141,7 @@ const barHeight = (count: number, max: number) =>
         v-for="vinyl in mostPlayedVinyls"
         class="top-item-card"
         :style="{ backgroundColor: vinyl.play.albumColors?.length ? vinyl.play.albumColors[0] + '75' : 'var(--color-tile)' }"
-        @click="$router.push(`/crate/${vinyl.play.vinylId}`)"
+        @click="$router.push(`/${vinyl.play.vinylId}`)"
       >
         <img class="top-item-art" :src="vinyl.play.imageUrl" :alt="vinyl.play.album" />
         <div class="top-item-info">

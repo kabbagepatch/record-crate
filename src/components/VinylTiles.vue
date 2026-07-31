@@ -14,7 +14,7 @@ defineProps<{
       class="album-tile"
       :style="{ backgroundColor: vinyl?.albumColors?.length ? vinyl.albumColors[0] + '90' : 'var(--color-tile)' }"
       v-for="vinyl in vinyls"
-      @click="$router.push(`/crate/${vinyl.id}`)"
+      @click="$router.push(`/${vinyl.id}`)"
     >
       <img v-if="vinyl.imageUrl" class="album-art" :src="vinyl.imageUrl" :alt="vinyl.album">
       <div v-else class="album-art" :style="{ marginBottom: '10px', backgroundColor: 'var(--color-black)' }" />

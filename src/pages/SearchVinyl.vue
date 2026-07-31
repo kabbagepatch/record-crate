@@ -9,7 +9,7 @@ const router = useRouter();
 const route = useRoute();
 
 const selectVinyl = (vinyl: Vinyl) => {
-  router.push(`/crate/add/${vinyl.discogsId}`);
+  router.push(`/add/${vinyl.discogsId}`);
 }
 
 const results = ref<Vinyl[]>([]);
@@ -44,10 +44,10 @@ const searchAlbum = async (getCatalog = false) => {
 const onSearch = () => {
   if (search.value) {
     searchAlbum();
-    router.replace(`/crate/add?search=${search.value}`)
+    router.replace(`/add?search=${search.value}`)
   } else {
     results.value = [];
-    router.replace('/crate/add')
+    router.replace('/add')
   }
 }
 

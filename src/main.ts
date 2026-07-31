@@ -16,11 +16,11 @@ import VinylStats from './pages/VinylStats.vue';
 const routes = [
   { path: '/login', component: Login },
   { path: '/stats', component: VinylStats, meta: { requiresAuth: true }, },
-  { path: '/crate', component: VinylCatalog, meta: { requiresAuth: true }, },
-  { path: '/crate/add', component: SearchVinyl, meta: { requiresAuth: true }, },
-  { path: '/crate/add/:id', component: AddVinyl, meta: { requiresAuth: true }, },
-  { path: '/crate/:id', component: VinylPage, meta: { requiresAuth: true }, },
-  { path: '/', component: VinylActivity, meta: { requiresAuth: true }, },
+  { path: '/add', component: SearchVinyl, meta: { requiresAuth: true }, },
+  { path: '/add/:id', component: AddVinyl, meta: { requiresAuth: true }, },
+  { path: '/:id', component: VinylPage, meta: { requiresAuth: true }, },
+  { path: '/activity', component: VinylActivity, meta: { requiresAuth: true }, },
+  { path: '/', component: VinylCatalog, meta: { requiresAuth: true }, },
 ]
 
 const router = createRouter({

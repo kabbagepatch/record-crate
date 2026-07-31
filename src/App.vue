@@ -24,12 +24,12 @@ const onLogout = async () => {
     <a href="/" :style="{ color: 'var(--color-white)' }">
       <div class="title">
         <img :style="{ width: '32px', height: '32px' }" src="./assets/vinyl.png" />
-        <h1>{{ $route.path === '/' ? 'Turntable' : `${$route.path[1]?.toLocaleUpperCase()}${$route.path.split('/')[1]?.slice(1)}`}}</h1>
+        <h1>{{ $route.path === '/' ? 'Record Crate' : ($route.path.includes('/activity') ? 'Turntable Activity' : 'Vinyl Stats') }}</h1>
       </div>
     </a>
     
     <div class="icon-buttons" v-if="userLoaded && currentUser">
-      <button v-if="$route.path.includes('/crate/')" class="icon-button" @click="$router.back()">
+      <button v-if="$route.path.includes('/activity/')" class="icon-button" @click="$router.back()">
         <img class="icon" src="./assets/icons/back.png" />
       </button>
       <button class="icon-button" @click="onLogout">

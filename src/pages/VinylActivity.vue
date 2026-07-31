@@ -63,7 +63,7 @@ const deletePlay = async (row: ActivityItem) => {
     <div
       class="now-playing"
       :style="{ backgroundColor: nowPlaying.albumColors?.length ? nowPlaying.albumColors[0] + '80' : 'var(--color-tile)' }"
-      @click="$router.push(`/crate/${nowPlaying.vinylId}`)"
+      @click="$router.push(`/${nowPlaying.vinylId}`)"
     >
       <div class="now-playing-label">
         <div>Now Playing</div>
@@ -96,7 +96,7 @@ const deletePlay = async (row: ActivityItem) => {
       :style="{ backgroundColor: row?.albumColors?.length ? row.albumColors[0] + '70' : 'var(--color-tile)' }"
       @click="row.showTrash=!row.showTrash"
     >
-      <div class="album-info" @click="$router.push(`/crate/${row.vinylId}`)">
+      <div class="album-info" @click="$router.push(`/${row.vinylId}`)">
         <img class="album-art" :src="row.imageUrl" :alt="row.album">
         <div class="album-text">
           <div class="album">

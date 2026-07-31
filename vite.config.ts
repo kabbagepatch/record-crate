@@ -30,6 +30,14 @@ export default defineConfig({
           sizes: '512x512',
           type: 'image/png'
         }
+      ],
+      "screenshots": [
+        {
+          "src": "screenshot-mobile.png",
+          "sizes": "1080x2144",
+          "type": "image/png",
+          "label": "App view on mobile phone"
+        },
       ]
     },
 

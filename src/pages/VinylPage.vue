@@ -51,7 +51,7 @@ const deleteVinyl = async () => {
   if (confirm('Are you sure you want to delete this vinyl from your catalog?')) {
     try {
       await service.deleteVinyl(vinylId);
-      router.push('/crate');
+      router.push('/');
     } catch(e : any) {
       alert(e.response.data);
     }
@@ -63,7 +63,7 @@ const playVinyl = async () => {
   const sides = Array.from({ length: vinyl.value.nSides }, (_, i) => i + 1);
   try {
     await service.playVinyl(vinylId, { sides });
-    router.push('/');
+    router.push('/activity');
   } catch (e) {
     console.log(e);
   }

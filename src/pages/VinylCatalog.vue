@@ -55,7 +55,7 @@ const toggleView = (v : 'tile' | 'list') => {
       </button>
     </div>
     <div v-if="loading" class="loading">Loading...</div>
-    <VinylList v-else-if="view == 'list'" :vinyls="vinyls" v-on:vinyl-select="(vinyl : Vinyl) => $router.push(`/crate/${vinyl.id}`)" />
+    <VinylList v-else-if="view == 'list'" :vinyls="vinyls" v-on:vinyl-select="(vinyl : Vinyl) => $router.push(`/${vinyl.id}`)" />
     <VinylTiles v-else :vinyls="vinyls" />
   </div>
 </template>

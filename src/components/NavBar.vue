@@ -14,7 +14,7 @@ const close = (e : any) => {
 };
 
 const addToCatalog = () => {
-  router.push('/crate/add');
+  router.push('/add');
 }
 
 onMounted(() => {
@@ -33,6 +33,13 @@ onBeforeUnmount(() => {
         :class="'tab' + ($route.path === '/' ? ' selected' : '')"
         @click="$router.push('/')"
       >
+        <img class="icon" src="../assets/icons/vinyls.png" />
+        <span class="tab-name">Crate</span>
+      </div>
+      <div
+        :class="'tab' + ($route.path.includes('/activity') ? ' selected' : '')"
+        @click="$router.push('/activity')"
+      >
         <img class="icon" src="../assets/icons/vinyl.png" />
         <span class="tab-name">Turntable</span>
       </div>
@@ -43,17 +50,10 @@ onBeforeUnmount(() => {
         <img class="icon" src="../assets/icons/graph.png" />
         <span class="tab-name">Stats</span>
       </div>
-      <div
-        :class="'tab' + ($route.path.includes('/crate') && !$route.path.includes('/crate/add') ? ' selected' : '')"
-        @click="$router.push('/crate')"
-      >
-        <img class="icon" src="../assets/icons/vinyls.png" />
-        <span class="tab-name">Crate</span>
-      </div>
       <div :style="{ width: '420px', background: 'var(--color-bg-deep)' }" />
       <div class="add-button-container">
         <button
-          :class="'add-button' + ($route.path.includes('/crate/add') ? ' add-button-selected' : '')"
+          :class="'add-button' + ($route.path.includes('/add') ? ' add-button-selected' : '')"
           @click="addToCatalog"
         >
           <img class="add-button-icon" src="../assets/icons/plus.png" />
