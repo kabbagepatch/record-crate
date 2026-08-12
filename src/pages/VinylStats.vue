@@ -62,12 +62,13 @@ const mostPlayedVinyls = computed(() => {
 });
 
 const mostPlayedArtists = computed(() => {
-  const counts: Record<string, number> = {};
-  plays.value.forEach(p => { counts[p.artist] = (counts[p.artist] || 0) + 1; });
-  return Object.entries(counts)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 3)
-    .map(([artist, count]) => ({ artist, count }));
+  const counts: Record<string, { play: VinylPlay, count: number }> = {};
+  plays.value.forEach(p => {
+    if (!counts[p.artist]) counts[p.artist] = { play: p, count: 0 };
+    // @ts-ignore
+    counts[p.artist].count++;
+  });
+  return Object.values(counts).sort((a, b) => b.count - a.count).slice(0, 3);
 });
 
 const barHeight = (count: number, max: number) =>
@@ -155,9 +156,14 @@ const barHeight = (count: number, max: number) =>
     <!-- Most played artist -->
     <div class="section" v-if="mostPlayedArtists">
       <h3 class="section-title">Top Artists</h3>
-      <div class="top-item-card top-item-card-flat" v-for="artist in mostPlayedArtists">
+      <div
+        class="top-item-card top-item-card-flat"
+        v-for="artist in mostPlayedArtists"
+        :style="{ backgroundColor: artist.play.albumColors?.length ? artist.play.albumColors[0] + '75' : 'var(--color-tile)' }""
+      >
+        <img class="top-item-art" :src="artist.play.imageUrl" :alt="artist.play.album" />
         <div class="top-item-info">
-          <div class="top-item-name">{{ artist.artist }}</div>
+          <div class="top-item-name">{{ artist.play.artist }}</div>
           <div class="top-item-count">{{ artist.count }} plays</div>
         </div>
       </div>
