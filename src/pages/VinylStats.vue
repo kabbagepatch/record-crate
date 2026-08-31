@@ -159,7 +159,7 @@ const barHeight = (count: number, max: number) =>
       <div
         class="top-item-card top-item-card-flat"
         v-for="artist in mostPlayedArtists"
-        :style="{ backgroundColor: artist.play.albumColors?.length ? artist.play.albumColors[0] + '75' : 'var(--color-tile)' }""
+        :style="{ backgroundColor: artist.play.albumColors?.length ? artist.play.albumColors[0] + '75' : 'var(--color-tile)' }"
       >
         <img class="top-item-art" :src="artist.play.imageUrl" :alt="artist.play.album" />
         <div class="top-item-info">
