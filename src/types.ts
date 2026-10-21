@@ -33,7 +33,7 @@ export interface VinylPlay {
   artist: string,
   nSides: number,
   imageUrl: string,
-  deleted: bool,
+  deleted: boolean,
   timestamp: string,
   albumColors?: string[],
 };
