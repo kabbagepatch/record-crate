@@ -13,7 +13,7 @@ const props = defineProps<{
 const album = ref(props.selectedVinyl.album || '');
 const artist = ref(props.selectedVinyl.artist || '');
 const nSides = ref(props.selectedVinyl.nSides || '2');
-const discColor = ref(props.selectedVinyl.albumColors?.[0] || '#000000');
+const discColorHex = ref(props.selectedVinyl.discColorHex || '#000000');
 
 const vinyl: any = ref({});
 if (props.selectedVinyl.discogsId) {
@@ -66,22 +66,22 @@ if (props.selectedVinyl.discogsId) {
             placeholder="2"
           />
         </div>
-        <!-- <div class="modal-input-container">
+        <div class="modal-input-container">
           <label for="disc-color">Disc Color</label>
           <input
             id="disc-color"
             class="modal-input"
-            v-model="discColor"
+            v-model="discColorHex"
             type="color"
           />
-        </div> -->
+        </div>
       </div>
       <div v-else>
         <VinylDetails v-if="vinyl.album" :vinyl="vinyl" />
       </div>
     </template>
     <template #footer>
-      <button class="add-button" @click="onSaveVinyl({ album, artist, nSides, discColor })">Save</button>
+      <button class="add-button" @click="onSaveVinyl({ album, artist, nSides, discColorHex })">Save</button>
     </template>
   </Modal>
 </template>

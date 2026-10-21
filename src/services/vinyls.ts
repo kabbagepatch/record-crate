@@ -1,4 +1,5 @@
 import axios from 'axios';
+import applyCaseMiddleware from 'axios-case-converter';
 import type { DiscogsVinyl, Vinyl, VinylPlay } from '../types';
 import { getAuth } from 'firebase/auth';
 import { setupCache, type CacheAxiosResponse, type CachedStorageValue } from 'axios-cache-interceptor';
@@ -9,9 +10,9 @@ const CACHE_KEYS = {
   vinyl: (id: string) => `vinyl-${id}`,
 };
 
-const service = axios.create({
+const service = applyCaseMiddleware(axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
-});
+}));
 service.interceptors.request.use(async (config) => {
   const token = await getAuth().currentUser?.getIdToken();
   config.headers['Authorization'] = `Bearer ${token}`;
@@ -22,7 +23,7 @@ setupCache(service);
 export const getVinyls = async () : Promise<Vinyl[]> => {
   try {
     // @ts-ignore
-    const response = await service.get('/vinyls', { id: CACHE_KEYS.LIST_VINYLS });
+    const response = await service.get('/vinyls/', { id: CACHE_KEYS.LIST_VINYLS });
     const data = response.data;
     data.sort((a: any, b: any) => {
       if (a.favorite && !b.favorite) return -1;
@@ -131,7 +132,7 @@ export const deleteVinyl = async (id: string) => {
 
 export const searchVinyls = async (term: string) : Promise<DiscogsVinyl[]> => {
   try {
-    const response = await service.get(`music/discogs/search?album=${term}`);
+    const response = await service.get(`vinyls/search?term=${term}`);
     return response.data;
   } catch (e) {
     console.log(e);
@@ -141,7 +142,7 @@ export const searchVinyls = async (term: string) : Promise<DiscogsVinyl[]> => {
 
 export const getDiscogsVinyl = async (discogsId: string) : Promise<Vinyl | undefined> => {
   try {
-    const response = await service.get(`music/discogs/release/${discogsId}`);
+    const response = await service.get(`vinyls/release/${discogsId}`);
     return response.data;
   } catch (e) {
     console.log(e);
@@ -151,7 +152,7 @@ export const getDiscogsVinyl = async (discogsId: string) : Promise<Vinyl | undef
 export const getVinylActivity = async () : Promise<VinylPlay[]> => {
   try {
     // @ts-ignore
-    const response = await service.get('/vinyls/history', { id: CACHE_KEYS.LIST_PLAYS });
+    const response = await service.get('/vinyls/activity', { id: CACHE_KEYS.LIST_PLAYS });
     return response.data;
   } catch (e) {
     console.log(e);

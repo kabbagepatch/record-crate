@@ -24,7 +24,7 @@ const onLogout = async () => {
     <a href="/" :style="{ color: 'var(--color-white)' }">
       <div class="title">
         <img :style="{ width: '36px', height: '36px' }" src="./assets/vinyl.png" />
-        <h1>{{ $route.path.match(/^\/\d*$/) ? 'Record Crate' : ($route.path.includes('/activity') ? 'Turntable Activity' : 'Vinyl Stats') }}</h1>
+        <h1>{{ $route.path.includes('/stats') ? 'Vinyl Stats' : ($route.path.includes('/activity') ? 'Turntable Activity' : 'Record Crate') }}</h1>
       </div>
     </a>
     

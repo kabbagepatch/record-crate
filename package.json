@@ -10,8 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "axios": "^1.13.2",
+    "axios": "^1.20.0",
     "axios-cache-interceptor": "^1.11.4",
+    "axios-case-converter": "^2.0.2",
     "extract-colors": "^4.2.1",
     "firebase": "^12.9.0",
     "vue": "^3.5.22",

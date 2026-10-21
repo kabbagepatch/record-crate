@@ -2,18 +2,22 @@
 import { onMounted } from 'vue';
 import type { Vinyl } from '../types';
 
-defineProps<{
+const props = defineProps<{
   vinyl?: Vinyl,
   onPlay?: () => void,
   onAdd?: () => void,
 }>()
 
 onMounted(() => window.scrollTo(0, 0));
+const albumColor = props.vinyl?.albumColors?.[1];
+function isDark(hex: string) {
+  return (parseInt(hex.slice(1), 16) >> 16) * 0.299 + ((parseInt(hex.slice(1), 16) >> 8) & 0xff) * 0.587 + (parseInt(hex.slice(1), 16) & 0xff) * 0.114 < 130;
+}
 
 </script>
 
 <template>
-  <section class="vinyl-header" :style="{ background: vinyl?.albumColors?.length ? vinyl.albumColors[0] + '75' : 'var(--color-tile-veil)' }" >
+  <section class="vinyl-header" :style="{ background: albumColor ? albumColor + '75' : 'var(--color-tile-veil)' }" >
     <img class="vinyl-art" v-if="vinyl?.imageUrl" :src="vinyl?.imageUrl" :alt="vinyl?.album" />
     <div class="vinyl-art" v-else />
     <div class="vinyl-details">
@@ -22,13 +26,16 @@ onMounted(() => window.scrollTo(0, 0));
       <h3 class="artist">{{ vinyl?.artist }}</h3>
       <div class="published">Released: {{ vinyl?.published }}</div>
       <div v-if="vinyl?.barcode" class="published">Bar Code: {{ vinyl?.barcode }}</div>
-      <div class="published">Disk: {{ vinyl?.discColor }}</div>
+      <div class="published">Disk: {{ vinyl?.discColorText }}</div>
     </div>
   </section>
-  <section class="button-container" :style="{ background: vinyl?.albumColors?.length ? vinyl.albumColors[0] + '75' : 'var(--color-tile-veil)' }" >
+  <section class="button-container" :style="{ background: albumColor ? albumColor + '75' : 'var(--color-tile-veil)' }" >
     <button
       v-if="onPlay"
-      :style="{ background: vinyl?.albumColors?.length ? vinyl.albumColors[0] : 'var(--color-white)' }"
+      :style="{
+        background: albumColor ? albumColor : 'var(--color-white)',
+        color: (albumColor && isDark(albumColor)) ? 'var(--color-text-light)' : 'var(--color-black)'
+      }"
       class="play-button"
       @click="onPlay"
     >
@@ -36,13 +43,16 @@ onMounted(() => window.scrollTo(0, 0));
     </button>
     <button
       v-if="onAdd"
-      :style="{ background: vinyl?.albumColors?.length ? vinyl.albumColors[0] : 'var(--color-white)' }"
+      :style="{
+        background: albumColor ? albumColor : 'var(--color-white)',
+        color: (albumColor && isDark(albumColor)) ? 'var(--color-text-light)' : 'var(--color-black)'
+      }"
       class="play-button"
       @click="onAdd"
     >
       + Add To Catalog
     </button>
-    <hr class="line" :style="{ borderColor: vinyl?.albumColors?.length ? vinyl.albumColors[0] : 'var(--color-white)' }" />
+    <hr class="line" :style="{ borderColor: albumColor ? albumColor : 'var(--color-white)' }" />
   </section>
   <section>
     <h3 class="subheader">Genres</h3>
@@ -50,7 +60,10 @@ onMounted(() => window.scrollTo(0, 0));
       <div v-for="tag in vinyl?.genres">
         <div
           class="tag"
-          :style="{ background: vinyl?.albumColors?.length ? vinyl.albumColors[0] : 'var(--color-white)' }"
+          :style="{
+            background: albumColor ? albumColor : 'var(--color-white)',
+            color: (albumColor && isDark(albumColor)) ? 'var(--color-text-light)' : 'var(--color-black)'
+          }"
         >{{ tag }}</div>
       </div>
     </div>
@@ -60,10 +73,10 @@ onMounted(() => window.scrollTo(0, 0));
     <div class="tracks">
       <div v-for="(track) in vinyl?.tracks">
         <div class="track">
-          <span class="track-index" :style="{ borderColor: vinyl?.albumColors?.length ? vinyl.albumColors[0] : 'var(--color-white)', }">
+          <span v-if="track.type === 'track'" class="track-index" :style="{ borderColor: albumColor ? albumColor : 'var(--color-white)', }">
             {{ track.position }}
           </span>
-          <span>
+          <span :style="track.type === 'heading' ? { display: 'block', fontWeight: 'bold', fontSize: '18px', marginBottom: '5px' } : {}">
             {{ track.title }}
           </span>
         </div>
@@ -150,7 +163,7 @@ onMounted(() => window.scrollTo(0, 0));
 
   .track-index {
     display: inline-flex;
-    font-size: 12px;
+    font-size: 10px;
     width: 16px;
     height: 16px;
     padding: 1px;

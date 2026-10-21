@@ -33,7 +33,7 @@ const searchAlbum = async (getCatalog = false) => {
     results.value = vinylResults.map(v => ({
       discogsId: v.discogsId,
       album: v.title,
-      artist: v.discColor,
+      artist: v.discColorText,
       imageUrl: v.imageUrl,
     })) as Vinyl[];
   } finally {

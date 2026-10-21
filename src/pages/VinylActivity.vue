@@ -44,7 +44,7 @@ const nowPlaying = computed(() =>
     : null
 );
 
-const historyItems = computed(() =>
+const activityHistory = computed(() =>
   nowPlaying.value ? vinylActivity.value.slice(1) : vinylActivity.value
 );
 
@@ -58,11 +58,12 @@ const deletePlay = async (row: ActivityItem) => {
 </script>
 
 <template>
+  <div v-if="!vinylActivity.length" class="loading">You have no vinyl plays yet</div>
   <div v-if="loading" class="loading">Loading...</div>
   <div v-if="nowPlaying">
     <div
       class="now-playing"
-      :style="{ backgroundColor: nowPlaying.albumColors?.length ? nowPlaying.albumColors[0] + '80' : 'var(--color-tile)' }"
+      :style="{ backgroundColor: nowPlaying.albumColors?.length ? nowPlaying.albumColors[1] + '60' : 'var(--color-tile)' }"
       @click="$router.push(`/${nowPlaying.vinylId}`)"
     >
       <div class="now-playing-label">
@@ -76,7 +77,7 @@ const deletePlay = async (row: ActivityItem) => {
         <div class="vinyl-disc">
           <div
             class="vinyl-disc-name"
-            :style="{ backgroundColor: nowPlaying.albumColors?.[0] ?? 'var(--color-tile-hi)' }"
+            :style="{ backgroundColor: nowPlaying.albumColors?.[1] ?? 'var(--color-tile-hi)' }"
           >{{ nowPlaying.album }}</div>
         </div>
         <div class="now-playing-info">
@@ -89,14 +90,14 @@ const deletePlay = async (row: ActivityItem) => {
       </div>
     </div>
   </div>
-  <div class="plays" v-if="historyItems.length > 0">
+  <div class="plays" v-if="activityHistory.length > 0">
     <div
       class="play-item"
-      v-for="row in historyItems"
-      :style="{ backgroundColor: row?.albumColors?.length ? row.albumColors[0] + '70' : 'var(--color-tile)' }"
+      v-for="row in activityHistory"
+      :style="{ backgroundColor: row?.albumColors?.length ? row.albumColors[1] + '50' : 'var(--color-tile)' }"
       @click="row.showTrash=!row.showTrash"
     >
-      <div class="album-info" @click="$router.push(`/${row.vinylId}`)">
+      <div class="album-info" @click="row.deleted ? undefined : $router.push(`/${row.vinylId}`)">
         <img class="album-art" :src="row.imageUrl" :alt="row.album">
         <div class="album-text">
           <div class="album">
@@ -175,10 +176,11 @@ const deletePlay = async (row: ActivityItem) => {
   }
 
   .vinyl-disc {
-    width: 88px;
-    height: 88px;
+    width: 87px;
+    height: 87px;
     border-radius: 50%;
     flex-shrink: 0;
+    margin-top: 2px;
     margin-left: -64px;
     display: flex;
     align-items: center;

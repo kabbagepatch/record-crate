@@ -33,7 +33,7 @@ const submitForm = async (e: SubmitEvent) => {
     error.value = 'Please enter a valid email';
     return;
   }
-  if (state.value === 'Sign up' && password !== password2) {
+  if (state.value === 'Sign up' && password.value !== password2.value) {
     error.value = 'Passwords do not match';
     return;
   }
@@ -47,7 +47,13 @@ const submitForm = async (e: SubmitEvent) => {
 
     router.replace('/');
   } catch (e: any) {
-    error.value = 'There was an error logging in';
+    if (e?.code) {
+      if (e.code === 'auth/email-already-in-use') {
+        error.value = 'Email already exists';
+      }
+    } else {
+      error.value = 'There was an error logging in';
+    }
   }
 }
 

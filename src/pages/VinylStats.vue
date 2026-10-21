@@ -30,6 +30,7 @@ const uniqueArtists = computed(() => new Set(vinyls.value.map(p => p.artist)).si
 const monthlyPlays = computed(() => {
   const year = new Date().getFullYear();
   const counts = Array(12).fill(0);
+  if (!plays.value.length) return [];
   plays.value
     .filter(p => new Date(p.timestamp).getFullYear() === year)
     .forEach(p => counts[new Date(p.timestamp).getMonth()]++);
@@ -53,6 +54,7 @@ const monthlyMax = computed(() => Math.max(...monthlyPlays.value.map(m => m.coun
 
 const mostPlayedVinyls = computed(() => {
   const counts: Record<string, { play: VinylPlay; count: number }> = {};
+  if (!plays.value.length) return [];
   plays.value.forEach(p => {
     if (!counts[p.vinylId]) counts[p.vinylId] = { play: p, count: 0 };
     // @ts-ignore
@@ -63,6 +65,7 @@ const mostPlayedVinyls = computed(() => {
 
 const mostPlayedArtists = computed(() => {
   const counts: Record<string, { play: VinylPlay, count: number }> = {};
+  if (!plays.value.length) return [];
   plays.value.forEach(p => {
     if (!counts[p.artist]) counts[p.artist] = { play: p, count: 0 };
     // @ts-ignore
@@ -83,7 +86,7 @@ const barHeight = (count: number, max: number) =>
     <!-- Chips -->
     <div class="chips">
       <div class="chip">
-        <span class="chip-value">{{ totalPlays }}</span>
+        <span class="chip-value">{{ totalPlays || 0 }}</span>
         <span class="chip-label">Plays</span>
       </div>
       <div class="chip">
@@ -97,7 +100,7 @@ const barHeight = (count: number, max: number) =>
     </div>
 
     <!-- Monthly bar chart -->
-    <div class="section">
+    <div class="section" v-if="monthlyPlays.length">
       <h3 class="section-title">This Year</h3>
       <div class="bar-chart">
         <div
@@ -136,12 +139,12 @@ const barHeight = (count: number, max: number) =>
     </div> -->
 
     <!-- Most played vinyl -->
-    <div class="section" v-if="mostPlayedVinyls">
+    <div class="section" v-if="mostPlayedVinyls.length">
       <h3 class="section-title">Most Played</h3>
       <div
         v-for="vinyl in mostPlayedVinyls"
         class="top-item-card"
-        :style="{ backgroundColor: vinyl.play.albumColors?.length ? vinyl.play.albumColors[0] + '75' : 'var(--color-tile)' }"
+        :style="{ backgroundColor: vinyl.play.albumColors?.length ? vinyl.play.albumColors[1] + '75' : 'var(--color-tile)' }"
         @click="$router.push(`/${vinyl.play.vinylId}`)"
       >
         <img class="top-item-art" :src="vinyl.play.imageUrl" :alt="vinyl.play.album" />
@@ -154,12 +157,12 @@ const barHeight = (count: number, max: number) =>
     </div>
 
     <!-- Most played artist -->
-    <div class="section" v-if="mostPlayedArtists">
+    <div class="section" v-if="mostPlayedArtists.length">
       <h3 class="section-title">Top Artists</h3>
       <div
         class="top-item-card top-item-card-flat"
         v-for="artist in mostPlayedArtists"
-        :style="{ backgroundColor: artist.play.albumColors?.length ? artist.play.albumColors[0] + '75' : 'var(--color-tile)' }"
+        :style="{ backgroundColor: artist.play.albumColors?.length ? artist.play.albumColors[1] + '75' : 'var(--color-tile)' }"
       >
         <img class="top-item-art" :src="artist.play.imageUrl" :alt="artist.play.album" />
         <div class="top-item-info">

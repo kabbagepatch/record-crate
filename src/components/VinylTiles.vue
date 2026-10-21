@@ -6,13 +6,20 @@ defineProps<{
   vinyls: Vinyl[]
 }>()
 
+function isDark(hex: string) {
+  return (parseInt(hex.slice(1), 16) >> 16) * 0.299 + ((parseInt(hex.slice(1), 16) >> 8) & 0xff) * 0.587 + (parseInt(hex.slice(1), 16) & 0xff) * 0.114 < 130;
+}
+
 </script>
 
 <template>
   <div class="albums">
     <div
       class="album-tile"
-      :style="{ backgroundColor: vinyl?.albumColors?.length ? vinyl.albumColors[0] + '90' : 'var(--color-tile)' }"
+      :style="{
+        backgroundColor: vinyl?.albumColors?.[1] ? vinyl.albumColors[1] + '90' : 'var(--color-tile)',
+        color: vinyl?.albumColors?.[1] && isDark(vinyl?.albumColors?.[1]) ? 'var(--color-text-light)' : 'var(--color-text-subtle)'
+      }"
       v-for="vinyl in vinyls"
       @click="$router.push(`/${vinyl.id}`)"
     >
@@ -65,7 +72,6 @@ defineProps<{
   }
 
   .artist {
-    color: var(--color-text-subtle);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

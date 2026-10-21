@@ -25,7 +25,7 @@ const onAddVinyl = async () => {
   if (!vinyl.value) return;
 
   try {
-    const res = await service.createVinyl(vinyl.value.discogsId);
+    const res = await service.createVinyl(vinyl.value.id);
     router.push(res.data.id ? `/${res.data.id}` : '/');
   } catch (e) {
     console.log(e);

@@ -16,6 +16,10 @@ const selectClick = (vinyl: Vinyl) => {
   if (props.onVinylSelect) props.onVinylSelect(vinyl)
 }
 
+function isDark(hex: string) {
+  return (parseInt(hex.slice(1), 16) >> 16) * 0.299 + ((parseInt(hex.slice(1), 16) >> 8) & 0xff) * 0.587 + (parseInt(hex.slice(1), 16) & 0xff) * 0.114 < 130;
+}
+
 </script>
 
 <template>
@@ -24,7 +28,10 @@ const selectClick = (vinyl: Vinyl) => {
       class="album-item"
       v-for="vinyl in vinyls"
       @click="selectClick(vinyl)"
-      :style="{ backgroundColor: vinyl?.albumColors?.length ? vinyl.albumColors[0] + '70' : 'var(--color-tile-hi)' }"
+      :style="{
+        backgroundColor: vinyl?.albumColors?.[1] ? vinyl.albumColors[1] + '70' : 'var(--color-tile-hi)',
+        color: vinyl?.albumColors?.[1] && isDark(vinyl?.albumColors?.[1]) ? 'var(--color-text-light)' : 'var(--color-black)'
+      }"
     >
       <div class="album-info">
         <img v-if="vinyl.imageUrl" class="album-art" :src="vinyl.imageUrl" :alt="vinyl.album">
@@ -74,7 +81,6 @@ const selectClick = (vinyl: Vinyl) => {
   }
 
   .artist {
-    color: var(--color-text-subtle);
     font-size: 15px;
   }
 

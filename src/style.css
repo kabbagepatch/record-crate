@@ -12,6 +12,10 @@
   --color-text-muted: hsl(33, 25%, 6%);
   --color-text-subtle: hsl(33, 22%, 15%);
 
+  --color-text-light: hsl(43, 10%, 86%);
+  --color-text-light-muted: hsl(43, 5%, 86%);
+  --color-text-light-subtle: hsl(43, 4%, 76%);
+
   --color-white: hsl(52, 94%, 98%);
   --color-black: hsl(0, 0%, 3%);
   --color-overlay: hsla(0, 0%, 0%, 0.7);

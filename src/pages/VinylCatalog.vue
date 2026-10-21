@@ -5,6 +5,7 @@ import VinylList from '../components/VinylList.vue';
 import VinylTiles from '../components/VinylTiles.vue';
 import { getVinyls } from '../services/vinyls';
 import type { Vinyl } from '../types';
+import { RouterLink } from 'vue-router';
 
 const vinyls = ref<Vinyl[]>([]);
 const loading = ref(false);
@@ -54,6 +55,7 @@ const toggleView = (v : 'tile' | 'list') => {
         <img class="icon" src="../assets/icons/list.png" />
       </button>
     </div>
+    <div v-if="!vinyls.length" class="loading">Your crate is empty. Add a new vinyl <RouterLink to="/add">here</RouterLink></div>
     <div v-if="loading" class="loading">Loading...</div>
     <VinylList v-else-if="view == 'list'" :vinyls="vinyls" v-on:vinyl-select="(vinyl : Vinyl) => $router.push(`/${vinyl.id}`)" />
     <VinylTiles v-else :vinyls="vinyls" />
@@ -117,5 +119,9 @@ const toggleView = (v : 'tile' | 'list') => {
   .view-toggle:nth-of-type(2) {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+  }
+
+  a {
+    color: var(--color-bg-deep)
   }
 </style>

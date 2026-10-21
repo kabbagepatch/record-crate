@@ -6,10 +6,12 @@ export interface Vinyl {
   album: string,
   artist: string,
   nSides: number,
-  discColor: string,
+  discColorText: string,
+  discColorHex: string,
   favorite: boolean,
   genres: string[],
   tracks: {
+    type: string,
     position: string,
     title: string,
   }[],
@@ -31,6 +33,7 @@ export interface VinylPlay {
   artist: string,
   nSides: number,
   imageUrl: string,
+  deleted: bool,
   timestamp: string,
   albumColors?: string[],
 };
@@ -42,7 +45,7 @@ export interface DiscogsVinyl {
   genres: string[],
   thumbnailUrl: string,
   imageUrl: string,
-  discColor: string,
+  discColorText: string,
   barcode: string,
   albumColors?: string[],
 }

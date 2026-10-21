@@ -3,13 +3,13 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, type User } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_API_KEY,
-  authDomain: 'habitsapi-426700.firebaseapp.com',
-  projectId: 'habitsapi-426700',
-  storageBucket: 'habitsapi-426700.appspot.com',
-  messagingSenderId: '472591136365',
-  appId: '1:472591136365:web:6129ffd560b9c66e7cf164',
-  measurementId: 'G-TF2VLVQTLR'
+  apiKey: "AIzaSyBDm-EuZ9h1TwfppDLnksrj7Ue-WULUd-Q",
+  authDomain: "tracker-services-508200.firebaseapp.com",
+  projectId: "tracker-services-508200",
+  storageBucket: "tracker-services-508200.firebasestorage.app",
+  messagingSenderId: "425540880944",
+  appId: "1:425540880944:web:105860928390b790c93bf5",
+  measurementId: "G-E59M8W8GVK"
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
