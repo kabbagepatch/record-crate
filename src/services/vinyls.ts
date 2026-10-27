@@ -41,8 +41,8 @@ export const getVinyls = async () : Promise<Vinyl[]> => {
   }
 };
 
-export const createVinyl = async (discogsId: string | undefined) => {
-  return service.post('/vinyls', { discogsId }, {
+export const createVinyl = async (releaseId: string | undefined) => {
+  return service.post('/vinyls', { releaseId }, {
     // @ts-ignore
     cache: {
       update: {
@@ -140,9 +140,9 @@ export const searchVinyls = async (term: string) : Promise<DiscogsVinyl[]> => {
   }
 }
 
-export const getDiscogsVinyl = async (discogsId: string) : Promise<Vinyl | undefined> => {
+export const getDiscogsVinyl = async (releaseId: string) : Promise<Vinyl | undefined> => {
   try {
-    const response = await service.get(`vinyls/release/${discogsId}`);
+    const response = await service.get(`vinyls/release/${releaseId}`);
     return response.data;
   } catch (e) {
     console.log(e);

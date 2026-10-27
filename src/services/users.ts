@@ -15,7 +15,7 @@ export const signUp = async (email : string, password : string, name : string) =
   const userCred = await createUserWithEmailAndPassword(auth, email, password)
   await updateProfile(userCred.user, { displayName: name })
   await axios.post(
-    `${baseUrl}/users`,
+    `${baseUrl}/users/`,
     undefined,
     { headers: { Authorization: `Bearer ${await auth.currentUser?.getIdToken()}` } }
   );

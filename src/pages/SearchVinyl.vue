@@ -9,7 +9,7 @@ const router = useRouter();
 const route = useRoute();
 
 const selectVinyl = (vinyl: Vinyl) => {
-  router.push(`/add/${vinyl.discogsId}`);
+  router.push(`/add/${vinyl.releaseId}`);
 }
 
 const results = ref<Vinyl[]>([]);
@@ -31,7 +31,7 @@ const searchAlbum = async (getCatalog = false) => {
   try {
     const vinylResults = await searchVinyls(search.value);
     results.value = vinylResults.map(v => ({
-      discogsId: v.discogsId,
+      releaseId: v.releaseId,
       album: v.title,
       artist: v.discColorText,
       imageUrl: v.imageUrl,

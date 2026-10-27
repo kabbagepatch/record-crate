@@ -16,8 +16,8 @@ const nSides = ref(props.selectedVinyl.nSides || '2');
 const discColorHex = ref(props.selectedVinyl.discColorHex || '#000000');
 
 const vinyl: any = ref({});
-if (props.selectedVinyl.discogsId) {
-  getDiscogsVinyl(props.selectedVinyl.discogsId).then(result => {
+if (props.selectedVinyl.releaseId) {
+  getDiscogsVinyl(props.selectedVinyl.releaseId).then(result => {
     vinyl.value = result;
   }).catch(e => {
     console.log(e);
@@ -37,7 +37,7 @@ if (props.selectedVinyl.discogsId) {
       </div>
     </template>
     <template #body>
-      <div v-if="!selectedVinyl.discogsId" class="modal-inputs">
+      <div v-if="!selectedVinyl.releaseId" class="modal-inputs">
         <div class="modal-input-container">
           <label for="album">Album</label>
           <input

@@ -19,7 +19,7 @@ export interface Vinyl {
   albumImageUrl: string,
   vinylImageUrl: string,
   published: string,
-  discogsId?: string,
+  releaseId?: string,
   barcode?: string,
   albumColors?: string[],
 };
@@ -39,7 +39,7 @@ export interface VinylPlay {
 };
 
 export interface DiscogsVinyl {
-  discogsId: string,
+  releaseId: string,
   title: string,
   published: string,
   genres: string[],
