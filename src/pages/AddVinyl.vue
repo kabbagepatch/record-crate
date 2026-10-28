@@ -15,7 +15,7 @@ const getDiscogsVinyl = async (id: string) => {
   try {
     vinyl.value = await service.getDiscogsVinyl(id);
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
 watch(() => vinylId, getDiscogsVinyl);
@@ -28,7 +28,7 @@ const onAddVinyl = async () => {
     const res = await service.createVinyl(vinyl.value.id);
     router.push(res.data.id ? `/${res.data.id}` : '/');
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
 

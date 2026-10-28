@@ -15,6 +15,7 @@ import VinylStats from './pages/VinylStats.vue';
 
 const routes = [
   { path: '/login', component: Login },
+  { path: '/verify-email', component: Login },
   { path: '/stats', component: VinylStats, meta: { requiresAuth: true }, },
   { path: '/add', component: SearchVinyl, meta: { requiresAuth: true }, },
   { path: '/add/:id', component: AddVinyl, meta: { requiresAuth: true }, },
@@ -42,6 +43,9 @@ router.beforeEach(async (to) => {
 
   if (to.meta.requiresAuth && !currentUser.value) {
     return '/login';
+  }
+  if (to.meta.requiresAuth && currentUser.value && !currentUser.value.emailVerified) {
+    return '/verify-email';
   }
 })
 

@@ -19,7 +19,7 @@ const fetchVinyl = async (id: string) => {
   try {
     vinyl.value = await service.getVinyl(id);
   } catch (e) {
-    console.log(e);
+    console.error(e);
   } finally {
     loading.value = false;
   }
@@ -34,7 +34,7 @@ const favoriteVinyl = async () => {
     await service.favoriteVinyl(vinylId, !vinyl.value.favorite)
     vinyl.value.favorite = !vinyl.value?.favorite;
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
 
@@ -43,7 +43,7 @@ const updateVinyl = async (data: Vinyl) => {
     vinyl.value = await service.updateVinyl(vinylId, data);
     showEditModal.value = false;
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
 
@@ -65,7 +65,7 @@ const playVinyl = async () => {
     await service.playVinyl(vinylId, { sides });
     router.push('/activity');
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
 

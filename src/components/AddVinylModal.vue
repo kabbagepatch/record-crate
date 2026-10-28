@@ -20,7 +20,7 @@ if (props.selectedVinyl.releaseId) {
   getDiscogsVinyl(props.selectedVinyl.releaseId).then(result => {
     vinyl.value = result;
   }).catch(e => {
-    console.log(e);
+    console.error(e);
   })
 }
 

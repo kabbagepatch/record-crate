@@ -36,7 +36,7 @@ export const getVinyls = async () : Promise<Vinyl[]> => {
     });
     return data;
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return [];
   }
 };
@@ -135,7 +135,7 @@ export const searchVinyls = async (term: string) : Promise<DiscogsVinyl[]> => {
     const response = await service.get(`vinyls/search?term=${term}`);
     return response.data;
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return [];
   }
 }
@@ -145,7 +145,7 @@ export const getDiscogsVinyl = async (releaseId: string) : Promise<Vinyl | undef
     const response = await service.get(`vinyls/release/${releaseId}`);
     return response.data;
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
 
@@ -155,7 +155,7 @@ export const getVinylActivity = async () : Promise<VinylPlay[]> => {
     const response = await service.get('/vinyls/activity', { id: CACHE_KEYS.LIST_PLAYS });
     return response.data;
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return [];
   }
 }

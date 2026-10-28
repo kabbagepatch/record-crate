@@ -9,11 +9,10 @@ const router = useRouter();
 
 const onLogout = async () => {
   try {
-    console.log('SIgn out')
     await signOut();
     router.replace('/login');
   } catch (e) {
-    console.log('There was an error signing out');
+    console.error(e);
   }
 }
 
@@ -29,7 +28,7 @@ const onLogout = async () => {
     </a>
     
     <div class="icon-buttons" v-if="userLoaded && currentUser">
-      <button v-if="$route.path !== '/'" class="icon-button" @click="$router.back()">
+      <button v-if="$route.path !== '/' && $route.path !== '/login'" class="icon-button" @click="$router.back()">
         <img class="icon" src="./assets/icons/back.png" />
       </button>
       <button class="icon-button" @click="onLogout">
