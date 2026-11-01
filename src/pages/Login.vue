@@ -2,18 +2,12 @@
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { currentUser, userLoaded } from '../firebaseApp';
-import { resetPassword, signIn, signUp, verifyEmail } from '../services/users';
+import { guestLogin, guestSignUp, resetPassword, signIn, signUp, verifyEmail, getMe } from '../services/users';
 import { FirebaseError } from 'firebase/app';
 
 const EMAIL_REGEX = /^\S+@\S+\.\S+$/;
 
 const router = useRouter();
-
-if (userLoaded.value && currentUser.value && currentUser.value.emailVerified) {
-  router.replace('/');
-} else if (userLoaded.value && currentUser.value && !currentUser.value.emailVerified) {
-  router.replace('/verify-email');
-}
 
 const state = ref<'Log in' | 'Sign up' | 'Verify email' | 'Reset password'>(currentUser.value ? 'Verify email' : 'Log in');
 const name = ref('');
@@ -22,6 +16,24 @@ const password = ref('');
 const password2 = ref('');
 const status = ref('');
 const error = ref('');
+const guestMode = ref(false);
+
+if (userLoaded.value && currentUser.value && currentUser.value.emailVerified) {
+  router.replace('/');
+} else if (userLoaded.value && currentUser.value && !currentUser.value.emailVerified && !currentUser.value.isAnonymous) {
+  state.value = 'Verify email';
+}
+if (userLoaded.value && currentUser.value) {
+  getMe().then((me) => {
+    console.log('me', me);
+    if (me && !me.email) {
+      state.value = 'Sign up';
+      guestMode.value = true;
+    }
+  }).catch((e) => {
+    console.log(e);
+  });
+}
 
 const buttonText = computed(() => {
   if (state.value === 'Log in') return 'Log in';
@@ -54,7 +66,11 @@ const submitForm = async (e: SubmitEvent) => {
       await signIn(email.value, password.value);
       router.replace('/');
     } else if (state.value === 'Sign up') {
-      await signUp(email.value, password.value, name.value);
+      if (guestMode.value) {
+        await guestSignUp(email.value, password.value, name.value);
+      } else {
+        await signUp(email.value, password.value, name.value);
+      }
       state.value = 'Verify email';
       await verifyEmail();
       status.value = 'Verification email sent. Please check your inbox. Refresh the page after verifying your email.';
@@ -84,6 +100,15 @@ const submitForm = async (e: SubmitEvent) => {
   }
 }
 
+const continueAsGuest = async () => {
+  try {
+    await guestLogin();
+    router.replace('/');
+  } catch (e) {
+    error.value = 'There was an error logging in as a guest';
+  }
+}
+
 const fieldUpdate = () => {
   error.value = '';
 }
@@ -101,12 +126,18 @@ const fieldUpdate = () => {
       <input v-if="state === 'Sign up'" v-model="password2" @focus="fieldUpdate" class="field" type="password" id="password" name="password" required placeholder="Repeat Password" />
       <button class="submit" type="submit">{{ buttonText }}</button>
     </form>
-    <p v-if="status" class="status">{{ status }}</p>
-    <p v-if="error" class="error">{{ error }}</p>
-    <p v-if="state === 'Sign up'">Have an account already? <a href="#" @click="toggleState('Log in')">Log in</a></p>
-    <p v-if="state === 'Log in'">Don't Have an Account? <a href="#" @click="toggleState('Sign up')">Sign Up</a></p>
-    <p v-if="state === 'Log in'">Forgot your password? <a href="#" @click="toggleState('Reset password')">Reset it</a></p>
-    <p v-if="state === 'Reset password'">Back to login? <a href="#" @click="toggleState('Log in')">Log in</a></p>
+    <div class="messages">
+      <p v-if="status" class="status">{{ status }}</p>
+      <p v-if="error" class="error">{{ error }}</p>
+      <p v-if="state === 'Sign up' && !guestMode" class="link">Have an account already? <a href="#" @click="toggleState('Log in')">Log in</a></p>
+      <p v-if="state === 'Sign up' && guestMode" class="link">Your vinyls will be still be there after your email is verified!</p>
+      <p v-if="state === 'Log in'" class="link">Don't Have an Account? <a href="#" @click="toggleState('Sign up')">Sign Up</a></p>
+      <p v-if="state === 'Log in'" class="link"><a href="#" @click="toggleState('Reset password')">Forgot your password</a></p>
+      <p v-if="state === 'Reset password'" class="link">Back to login? <a href="#" @click="toggleState('Log in')">Log in</a></p>
+    </div>
+    <div v-if="state === 'Log in'" class="guest-login">
+      <button @click="continueAsGuest">Continue as Guest</button>
+    </div>
   </div>
 </template>
 
@@ -151,9 +182,23 @@ const fieldUpdate = () => {
     text-transform: uppercase;
   }
 
-  p {
+  .messages {
     margin-top: 10px;
-    margin-bottom: 0px;
+  }
+
+  .guest-login {
+    margin-top: 20px;
+  }
+
+  .guest-login button {
+    width: 100%;
+    font-size: 16px;
+    text-transform: uppercase;
+  }
+
+  p {
+    margin-top: 0;
+    margin-bottom: 5px;
     text-align: center;
     padding: 0 20px;
   }

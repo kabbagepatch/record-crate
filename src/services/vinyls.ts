@@ -1,24 +1,7 @@
-import axios from 'axios';
-import applyCaseMiddleware from 'axios-case-converter';
+import { type CacheAxiosResponse, type CachedStorageValue } from 'axios-cache-interceptor';
+
+import service, { CACHE_KEYS } from './service';
 import type { DiscogsVinyl, Vinyl, VinylPlay } from '../types';
-import { getAuth } from 'firebase/auth';
-import { setupCache, type CacheAxiosResponse, type CachedStorageValue } from 'axios-cache-interceptor';
-
-const CACHE_KEYS = {
-  LIST_VINYLS: 'list-vinyls',
-  LIST_PLAYS: 'list-vinyl-plays',
-  vinyl: (id: string) => `vinyl-${id}`,
-};
-
-const service = applyCaseMiddleware(axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
-}));
-service.interceptors.request.use(async (config) => {
-  const token = await getAuth().currentUser?.getIdToken();
-  config.headers['Authorization'] = `Bearer ${token}`;
-  return config;
-});
-setupCache(service);
 
 export const getVinyls = async () : Promise<Vinyl[]> => {
   try {
@@ -51,8 +34,9 @@ export const createVinyl = async (releaseId: string | undefined) => {
           cache.data.data = [vinylResponse.data].concat(cache.data.data);
 
           return cache;
-        }
-      }
+        },
+        [CACHE_KEYS.ME]: 'delete'
+      },
     }
   });
 }
@@ -131,13 +115,11 @@ export const deleteVinyl = async (id: string) => {
 }
 
 export const searchVinyls = async (term: string) : Promise<DiscogsVinyl[]> => {
-  try {
-    const response = await service.get(`vinyls/search?term=${term}`);
-    return response.data;
-  } catch (e) {
-    console.error(e);
-    return [];
-  }
+  const response = await service.get(`vinyls/search?term=${term}`, {
+    // @ts-ignore
+    cache: { update: { [CACHE_KEYS.ME]: 'delete' } }
+  });
+  return response.data;
 }
 
 export const getDiscogsVinyl = async (releaseId: string) : Promise<Vinyl | undefined> => {

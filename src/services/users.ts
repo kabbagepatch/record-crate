@@ -1,30 +1,49 @@
-import axios from 'axios';
 import {
   createUserWithEmailAndPassword,
   getAuth,
   signInWithEmailAndPassword,
-  updateProfile,
   sendEmailVerification,
   sendPasswordResetEmail,
+  signInAnonymously,
+  EmailAuthProvider,
+  linkWithCredential,
 } from 'firebase/auth';
 
 import firebaseApp from '../firebaseApp';
-
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
+import service, { CACHE_KEYS } from './service';
 
 export const getCurrentUser = () => {
   const auth = getAuth(firebaseApp);
   return auth.currentUser;
 }
 
+export const getMe = async () => {
+  const response = await service.get(`/users/me`,
+  // @ts-ignore
+  { id: CACHE_KEYS.ME });
+  return response.data;
+}
+
 export const signUp = async (email : string, password : string, name : string) => {
   const auth = getAuth(firebaseApp);
   const userCred = await createUserWithEmailAndPassword(auth, email, password);
-  await updateProfile(userCred.user, { displayName: name });
-  await axios.post(
-    `${baseUrl}/users/`,
-    { name },
-    { headers: { Authorization: `Bearer ${await auth.currentUser?.getIdToken()}` } }
+  await service.post(`/users/`, { name }, {
+    headers: { Authorization: `Bearer ${await userCred.user?.getIdToken()}` }
+  });
+}
+
+export const guestSignUp = async (email : string, password : string, name : string) => {
+  const auth = getAuth(firebaseApp);
+  const credential = EmailAuthProvider.credential(email, password);
+  const user = auth.currentUser;
+  if (!user || !user.isAnonymous) {
+    throw new Error("No guest account is active");
+  }
+  await linkWithCredential(user, credential);
+  
+  await service.put(`/users/me`, { name }, { headers: { Authorization: `Bearer ${await user.getIdToken(true)}` } },
+    // @ts-ignore
+    { cache: { update: { [CACHE_KEYS.ME]: 'delete' } } }
   );
 }
 
@@ -36,6 +55,8 @@ export const signIn = async (email : string, password : string) => {
 export const signOut = async () => {
   const auth = getAuth(firebaseApp);
   await auth.signOut();
+    // @ts-ignore
+  await service.storage.clear?.();
 }
 
 export const verifyEmail = async () => {
@@ -48,4 +69,12 @@ export const verifyEmail = async () => {
 export const resetPassword = async (email: string) => {
   const auth = getAuth(firebaseApp);
   await sendPasswordResetEmail(auth, email);
+}
+
+export const guestLogin = async () => {
+  const auth = getAuth(firebaseApp);
+  const userCred = await signInAnonymously(auth);
+  await service.post(`/users/`, {}, {
+    headers: { Authorization: `Bearer ${await userCred.user?.getIdToken()}` }
+  });
 }

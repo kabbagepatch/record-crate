@@ -1,11 +1,24 @@
 <script setup lang="ts">
+import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
+
 import PWABadge from './components/PWABadge.vue';
 import { currentUser, userLoaded } from './firebaseApp';
-import { signOut } from './services/users';
+import { getMe, signOut } from './services/users';
 import NavBar from './components/NavBar.vue';
 
 const router = useRouter();
+
+const isGuest = ref(false);
+watch(userLoaded, (newValue) => {
+  if (newValue) {
+    getMe().then((me) => {
+      isGuest.value = (me && !me.email);
+    }).catch((e) => {
+      console.error(e);
+    });
+  }
+});
 
 const onLogout = async () => {
   try {
@@ -28,8 +41,11 @@ const onLogout = async () => {
     </a>
     
     <div class="icon-buttons" v-if="userLoaded && currentUser">
-      <button v-if="$route.path !== '/' && $route.path !== '/login'" class="icon-button" @click="$router.back()">
+      <button v-if="$route.path !== '/' && $route.path !== '/login' && $route.path !== '/verify-email'" class="icon-button" @click="$router.back()">
         <img class="icon" src="./assets/icons/back.png" />
+      </button>
+      <button v-if="isGuest" class="icon-button" @click="$router.push('/login')">
+        <img class="icon" src="./assets/icons/login.png" />
       </button>
       <button class="icon-button" @click="onLogout">
         <img class="icon" src="./assets/icons/logout.png" />

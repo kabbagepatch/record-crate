@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { RouterLink } from 'vue-router';
 
 import VinylList from '../components/VinylList.vue';
 import VinylTiles from '../components/VinylTiles.vue';
 import { getVinyls } from '../services/vinyls';
 import type { Vinyl } from '../types';
-import { RouterLink } from 'vue-router';
+import { getMe } from '../services/users.ts';
 
 const vinyls = ref<Vinyl[]>([]);
 const loading = ref(false);
@@ -22,6 +23,15 @@ onMounted(async () => {
   } finally {
     loading.value = false;
   }
+});
+
+const user = ref<any>(null);
+const isGuest = ref(false);
+onMounted(() => {
+  getMe().then((me) => {
+    user.value = me;
+    isGuest.value = (me && !me.email);
+  });
 });
 
 const search = ref('');
@@ -55,10 +65,14 @@ const toggleView = (v : 'tile' | 'list') => {
         <img class="icon" src="../assets/icons/list.png" />
       </button>
     </div>
-    <div v-if="!vinyls.length" class="loading">Your crate is empty. Add a new vinyl <RouterLink to="/add">here</RouterLink></div>
+    <div v-if="!loading && !vinyls.length" class="loading">Your crate is empty. Add a new vinyl <RouterLink to="/add">here</RouterLink></div>
     <div v-if="loading" class="loading">Loading...</div>
     <VinylList v-else-if="view == 'list'" :vinyls="vinyls" v-on:vinyl-select="(vinyl : Vinyl) => $router.push(`/${vinyl.id}`)" />
     <VinylTiles v-else :vinyls="vinyls" />
+    <div v-if="!loading && user && isGuest" class="guest">
+      <div v-if="vinyls.length < user.vinylLimit">You can add up to {{ user.vinylLimit }} vinyls as a guest.</div>
+      <div v-else>You have reached the guest limit of {{ user.vinylLimit }} vinyls.</div>
+    </div>
   </div>
 </template>
 
@@ -77,6 +91,12 @@ const toggleView = (v : 'tile' | 'list') => {
     padding: 32px 0;
     text-align: center;
     color: var(--color-text-muted);
+  }
+
+  .guest {
+    text-align: center;
+    color: var(--color-text);
+    padding: 16px;
   }
 
   .album-search {

@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 import VinylList from '../components/VinylList.vue';
 import { getVinyls, searchVinyls } from '../services/vinyls';
 import type { Vinyl } from '../types';
+import { getMe } from '../services/users.ts';
 
 const router = useRouter();
 const route = useRoute();
@@ -36,39 +37,59 @@ const searchAlbum = async (getCatalog = false) => {
       artist: v.discColorText,
       imageUrl: v.imageUrl,
     })) as Vinyl[];
+  } catch (error: any) {
+    console.error(error);
+    error?.status === 429
+      ? alert('You have reached the guest search limit. Please complete sign up to continue.')
+      : alert('An error occurred while searching for albums. Please try again.');
   } finally {
     loading.value = false;
   }
 }
 
-const onSearch = () => {
+const onSearch = (e: Event) => {
+  e.preventDefault();
+
   if (search.value) {
-    searchAlbum();
-    router.replace(`/add?search=${search.value}`)
+    if (user.value.anonymousDiscogsRequestsRemaining > 0) {
+      user.value.anonymousDiscogsRequestsRemaining--;
+      searchAlbum();
+    } else {
+      alert('You have reached the guest search limit. Please complete sign up to continue.');
+    }
   } else {
     results.value = [];
-    router.replace('/add')
   }
 }
 
-onMounted(() => searchAlbum(true));
+const user = ref<any>(null);
+onMounted(() => {
+  getMe().then((me) => {
+    user.value = me;
+    if (me && me.email) {
+      searchAlbum(true);
+    }
+  });
+});
 
 </script>
 
 <template>
-  <div class="action-bar">
+  <form class="action-bar" @submit="onSearch">
     <input
       class="album-search"
       v-model="search"
       type="text"
       placeholder="Search for albums..."
-      @change="onSearch"
     />
-    <button class="search-button" @click="onSearch()">
+    <button type="submit" class="search-button">
       <img class="icon" src="../assets/icons/search.png" />
     </button>
+  </form>
+  <div v-if="!results.length" class="messages">
+    <div class="message">Add New Records to Crate</div>
+    <div v-if="user && !user.email" class="message">You have {{ user.anonymousDiscogsRequestsRemaining }} searches remaining</div>
   </div>
-  <div v-if="!results.length" class="loading">Add New Records to Crate</div>
   <div v-if="loading" class="loading">Searching...</div>
   <div v-else>
     <div v-if="existingVinyls.length" >
@@ -141,6 +162,16 @@ onMounted(() => searchAlbum(true));
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     background-color: var(--color-bg-deeper);
+  }
+
+  .messages {
+    padding: 32px 0;
+  }
+
+  .message {
+    text-align: center;
+    color: var(--color-text-muted);
+    padding: 8px 0;
   }
 
   .loading {

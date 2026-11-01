@@ -44,7 +44,7 @@ router.beforeEach(async (to) => {
   if (to.meta.requiresAuth && !currentUser.value) {
     return '/login';
   }
-  if (to.meta.requiresAuth && currentUser.value && !currentUser.value.emailVerified) {
+  if (to.meta.requiresAuth && currentUser.value && !currentUser.value.emailVerified && !currentUser.value.isAnonymous) {
     return '/verify-email';
   }
 })

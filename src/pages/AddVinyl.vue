@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 import VinylDetails from '../components/VinylDetails.vue';
 import * as service from '../services/vinyls';
 import type { Vinyl } from '../types';
+import { AxiosError } from 'axios';
 
 const route = useRoute();
 const router = useRouter();
@@ -29,6 +30,13 @@ const onAddVinyl = async () => {
     router.push(res.data.id ? `/${res.data.id}` : '/');
   } catch (e) {
     console.error(e);
+    if (e instanceof AxiosError) {
+      if (e.response?.status === 403) {
+        alert('You have reached your vinyl limit. Please complete sign up to add more vinyls.');
+      } else {
+        alert('An error occurred while adding the vinyl. Please try again.');
+      }
+    }
   }
 }
 
