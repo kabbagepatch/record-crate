@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import PWABadge from './components/PWABadge.vue';
@@ -10,7 +10,7 @@ import NavBar from './components/NavBar.vue';
 const router = useRouter();
 
 const isGuest = ref(false);
-watch(userLoaded, (newValue) => {
+watch(currentUser, (newValue) => {
   if (newValue) {
     getMe().then((me) => {
       isGuest.value = (me && !me.email);

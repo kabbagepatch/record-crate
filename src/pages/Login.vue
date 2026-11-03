@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
+
 import { currentUser, userLoaded } from '../firebaseApp';
 import { guestLogin, guestSignUp, resetPassword, signIn, signUp, verifyEmail, getMe } from '../services/users';
 import { FirebaseError } from 'firebase/app';
+import { verifyRecaptcha } from '../services/service';
 
 const EMAIL_REGEX = /^\S+@\S+\.\S+$/;
 
@@ -17,6 +19,7 @@ const password2 = ref('');
 const status = ref('');
 const error = ref('');
 const guestMode = ref(false);
+const requestInProgress = ref(false);
 
 if (userLoaded.value && currentUser.value && currentUser.value.emailVerified) {
   router.replace('/');
@@ -48,6 +51,31 @@ const toggleState = (destination: 'Log in' | 'Sign up' | 'Verify email' | 'Reset
   error.value = '';
 }
 
+function getRecaptchaToken(siteKey: string, actionName: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    grecaptcha.enterprise.ready(async () => {
+      try {
+        const token = await grecaptcha.enterprise.execute(siteKey, { action: actionName })
+        resolve(token);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  });
+}
+
+const verifyUserAction = async (action: string): Promise<boolean> => {
+  try {
+    const token = await getRecaptchaToken('6Lfo_vstAAAAAGdOIVuLP8fx7ZUWYfuElheq3BDB', action);
+    const response = await verifyRecaptcha(token, action);
+
+    return response.data.valid;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};
+
 const submitForm = async (e: SubmitEvent) => {
   e.preventDefault();
   status.value = '';
@@ -62,10 +90,16 @@ const submitForm = async (e: SubmitEvent) => {
   }
 
   try {
+    requestInProgress.value = true;
     if (state.value === 'Log in') {
       await signIn(email.value, password.value);
       router.replace('/');
     } else if (state.value === 'Sign up') {
+      const recaptchaVerified = await verifyUserAction('SIGNUP');
+      if (!recaptchaVerified) {
+        error.value = 'Recaptcha verification failed. Please try again later';
+        return;
+      }
       if (guestMode.value) {
         await guestSignUp(email.value, password.value, name.value);
       } else {
@@ -97,15 +131,25 @@ const submitForm = async (e: SubmitEvent) => {
     } else {
       error.value = 'There was an error logging in';
     }
+  } finally {
+    requestInProgress.value = false;
   }
 }
 
 const continueAsGuest = async () => {
+  requestInProgress.value = true;
   try {
+    const recaptchaVerified = await verifyUserAction('GUEST_LOGIN');
+    if (!recaptchaVerified) {
+      error.value = 'Recaptcha verification failed. Please try again later';
+      return;
+    }
     await guestLogin();
     router.replace('/');
   } catch (e) {
     error.value = 'There was an error logging in as a guest';
+  } finally {
+    requestInProgress.value = false;
   }
 }
 
@@ -124,20 +168,27 @@ const fieldUpdate = () => {
       <input v-model="email" :disabled="state === 'Verify email'" @focus="fieldUpdate" class="field" type="text" id="email" name="email" required placeholder="Email" />
       <input v-if="state === 'Log in' || state === 'Sign up'" v-model="password" @focus="fieldUpdate" class="field" type="password" id="password" name="password" required placeholder="Password" />
       <input v-if="state === 'Sign up'" v-model="password2" @focus="fieldUpdate" class="field" type="password" id="password" name="password" required placeholder="Repeat Password" />
-      <button class="submit" type="submit">{{ buttonText }}</button>
+      <button class="submit" type="submit" :disabled="requestInProgress">{{ buttonText }}</button>
     </form>
     <div class="messages">
-      <p v-if="status" class="status">{{ status }}</p>
-      <p v-if="error" class="error">{{ error }}</p>
       <p v-if="state === 'Sign up' && !guestMode" class="link">Have an account already? <a href="#" @click="toggleState('Log in')">Log in</a></p>
       <p v-if="state === 'Sign up' && guestMode" class="link">Your vinyls will be still be there after your email is verified!</p>
       <p v-if="state === 'Log in'" class="link">Don't Have an Account? <a href="#" @click="toggleState('Sign up')">Sign Up</a></p>
       <p v-if="state === 'Log in'" class="link"><a href="#" @click="toggleState('Reset password')">Forgot your password</a></p>
-      <p v-if="state === 'Reset password'" class="link">Back to login? <a href="#" @click="toggleState('Log in')">Log in</a></p>
+      <p v-if="state === 'Reset password'" class="link"><a href="#" @click="toggleState('Log in')">Back to login</a></p>
     </div>
     <div v-if="state === 'Log in'" class="guest-login">
-      <button @click="continueAsGuest">Continue as Guest</button>
+      <button :disabled="requestInProgress" @click="continueAsGuest">Continue as Guest</button>
     </div>
+    <div class="messages">
+      <p v-if="status" class="status">{{ status }}</p>
+      <p v-if="error" class="error">{{ error }}</p>
+    </div>
+    <small v-if="state === 'Log in' || state === 'Sign up'" class="recaptcha-notice">
+      This site is protected by reCAPTCHA and the Google
+        <a href="https://policies.google.com/privacy" target="_blank">Privacy Policy</a> and
+        <a href="https://policies.google.com/terms" target="_blank">Terms of Service</a> apply.
+    </small>
   </div>
 </template>
 
@@ -159,12 +210,12 @@ const fieldUpdate = () => {
   }
 
   form {
+    width: 80%;
     max-width: 500px;
     display: flex;
     flex-direction: column;
     gap: 12px;
     margin-top: 15px;
-    width: 80%;
   }
 
   .field {
@@ -196,6 +247,10 @@ const fieldUpdate = () => {
     text-transform: uppercase;
   }
 
+  button:disabled {
+    background-color: var(--color-bg-deep-muted);
+  }
+
   p {
     margin-top: 0;
     margin-bottom: 5px;
@@ -209,5 +264,16 @@ const fieldUpdate = () => {
 
   p.error {
     color: var(--color-error);
+  }
+
+  small.recaptcha-notice {
+    padding: 0 4px;
+    font-size: 10px;
+    text-align: justify;
+    margin-top: 10px;
+  }
+
+  small.recaptcha-notice a {
+    text-decoration: none;
   }
 </style>

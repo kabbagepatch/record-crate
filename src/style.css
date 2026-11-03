@@ -1,6 +1,7 @@
 :root {
   --color-bg: hsl(32, 50%, 77%);
   --color-bg-deep: hsl(23, 40%, 39%);
+  --color-bg-deep-muted: hsl(23, 20%, 39%);
   --color-bg-deeper: hsl(6, 27%, 15%);
 
   --color-tile: hsl(74, 32%, 86%);
@@ -96,4 +97,8 @@ button:focus-visible {
 .app-content {
   padding: 0.5rem;
   margin-bottom: 60px;
+}
+
+.grecaptcha-badge {
+  visibility: hidden;
 }

@@ -22,3 +22,7 @@ export const CACHE_KEYS = {
 };
 
 export default service;
+
+export const verifyRecaptcha = async (token: string, action: string) => {
+  return await service.post(`/verify-recaptcha/`, { token, action });
+}

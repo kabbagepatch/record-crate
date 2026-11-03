@@ -1,7 +1,7 @@
 {
   "name": "record-crate",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/grecaptcha": "^3.0.9",
     "axios": "^1.20.0",
     "axios-cache-interceptor": "^1.11.4",
     "axios-case-converter": "^2.0.2",
