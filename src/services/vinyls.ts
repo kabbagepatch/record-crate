@@ -25,7 +25,7 @@ export const getVinyls = async () : Promise<Vinyl[]> => {
 };
 
 export const createVinyl = async (releaseId: string | undefined) => {
-  return service.post('/vinyls', { releaseId }, {
+  return service.post('/vinyls/', { releaseId }, {
     // @ts-ignore
     cache: {
       update: {
