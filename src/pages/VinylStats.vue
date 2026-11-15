@@ -60,7 +60,7 @@ const mostPlayedVinyls = computed(() => {
     // @ts-ignore
     counts[p.vinylId].count++;
   });
-  return Object.values(counts).sort((a, b) => b.count - a.count).slice(0, 3);
+  return Object.values(counts).sort((a, b) => b.count - a.count).slice(0, 5);
 });
 
 const mostPlayedArtists = computed(() => {
@@ -71,7 +71,7 @@ const mostPlayedArtists = computed(() => {
     // @ts-ignore
     counts[p.artist].count++;
   });
-  return Object.values(counts).sort((a, b) => b.count - a.count).slice(0, 3);
+  return Object.values(counts).sort((a, b) => b.count - a.count).slice(0, 5);
 });
 
 const barHeight = (count: number, max: number) =>

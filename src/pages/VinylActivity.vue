@@ -1,30 +1,18 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { deleteVinylPlay, getVinylActivity } from '../services/vinyls';
+
 import type { VinylPlay } from '../types';
+import { deleteVinylPlay, getVinylActivity } from '../services/vinyls';
+import ActivityList from '../components/ActivityList.vue';
 
-type ActivityItem = VinylPlay & { dateString: string; timeString: string; showTrash: boolean };
-
-const vinylActivity = ref<ActivityItem[]>([]);
+const vinylActivity = ref<VinylPlay[]>([]);
 const loading = ref(false);
 const deleting = ref(false);
-
-const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' } as const;
-const timeOptions = { hour: 'numeric', minute: '2-digit' } as const;
 
 onMounted(async () => {
   loading.value = true;
   try {
-    const result = await getVinylActivity();
-    vinylActivity.value = result.map((a) => {
-      const date = new Date(a.timestamp);
-      return {
-        ...a,
-        dateString: date.toLocaleDateString('en-US', dateOptions),
-        timeString: date.toLocaleTimeString('en-US', timeOptions),
-        showTrash: false,
-      };
-    });
+    vinylActivity.value = await getVinylActivity();
   } finally {
     loading.value = false;
   }
@@ -48,11 +36,11 @@ const activityHistory = computed(() =>
   nowPlaying.value ? vinylActivity.value.slice(1) : vinylActivity.value
 );
 
-const deletePlay = async (row: ActivityItem) => {
+const deletePlay = async (play: VinylPlay) => {
   deleting.value = true;
-  await deleteVinylPlay(row.vinylId, row.playId);
+  await deleteVinylPlay(play.vinylId, play.playId);
   deleting.value = false;
-  vinylActivity.value = vinylActivity.value.filter((a) => a.playId !== row.playId);
+  vinylActivity.value = vinylActivity.value.filter((a) => a.playId !== play.playId);
 }
 
 </script>
@@ -85,45 +73,12 @@ const deletePlay = async (row: ActivityItem) => {
             {{ nowPlaying.album }}
           </div>
           <div class="now-playing-artist">{{ nowPlaying.artist }}</div>
-          <div class="now-playing-artist">{{ nowPlaying.timeString }}</div>
+          <div class="now-playing-artist">{{ nowPlaying.timestamp }}</div>
         </div>
       </div>
     </div>
   </div>
-  <div class="plays" v-if="activityHistory.length > 0">
-    <div
-      class="play-item"
-      v-for="row in activityHistory"
-      :style="{ backgroundColor: row?.albumColors?.length ? row.albumColors[1] + '50' : 'var(--color-tile)' }"
-      @click="row.showTrash=!row.showTrash"
-    >
-      <div class="album-info" @click="row.deleted ? undefined : $router.push(`/${row.vinylId}`)">
-        <img class="album-art" :src="row.imageUrl" :alt="row.album">
-        <div class="album-text">
-          <div class="album">
-            <span class="album-name">
-              {{ row.album }}
-            </span>
-            <span class="album-sides" v-if="row.sides.length < row.nSides">
-              {{ row.sides.join(', ') }}
-            </span>
-          </div>
-          <div class="artist">{{ row.artist }}</div>
-        </div>
-      </div>
-      <div class="play-item-right">
-        <div>
-          <div class="date">{{ row.dateString }}</div>
-          <div class="time">{{ row.timeString }}</div>
-        </div>
-        <div v-if="row.showTrash">
-          <button :disabled="deleting" class="icon-button" @click="deletePlay(row)">
-            <img class="icon" src="../assets/icons/delete.png" />
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <ActivityList :vinyl-plays="activityHistory" :deleting="deleting" @delete="deletePlay" />
 </template>
 
 <style scoped>

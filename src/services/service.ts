@@ -19,6 +19,7 @@ export const CACHE_KEYS = {
   LIST_VINYLS: 'list-vinyls',
   LIST_PLAYS: 'list-vinyl-plays',
   vinyl: (id: string) => `vinyl-${id}`,
+  vinylPlays: (id: string) => `vinyl-plays-${id}`,
 };
 
 export default service;

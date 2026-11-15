@@ -1,23 +1,38 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
+
+import type { Vinyl, VinylPlay } from '../types';
 import VinylDetails from '../components/VinylDetails.vue';
 import AddVinylModal from '../components/AddVinylModal.vue';
+import ActivityList from '../components/ActivityList.vue';
 import * as service from '../services/vinyls';
-import type { Vinyl } from '../types';
 
 const router = useRouter();
 const route = useRoute();
 const vinylId = route.params.id as string;
 
 const vinyl = ref<Vinyl>();
+const plays = ref<VinylPlay[]>([]);
 const loading = ref(false);
 const showEditModal = ref(false);
+
+const fetchVinylPlays = async (id: string) => {
+  try {
+    plays.value = (await service.getVinylPlays(id)).map(p => {
+      return { ...vinyl.value, ...p, vinylId: id }
+    });
+    plays.value.sort((a, b) => (Date.parse(b.timestamp) - Date.parse(a.timestamp)))
+  } catch (e) {
+    console.error(e);
+  }
+}
 
 const fetchVinyl = async (id: string) => {
   loading.value = true;
   try {
     vinyl.value = await service.getVinyl(id);
+    fetchVinylPlays(id);
   } catch (e) {
     console.error(e);
   } finally {
@@ -87,6 +102,8 @@ const playVinyl = async () => {
       <img class="icon" src="../assets/icons/delete.png" />
     </button>
   </div>
+  <h3 class="subheader">Play Activity</h3>
+  <ActivityList v-if="plays" :vinyl-plays="plays" />
 </template>
 
 <style scoped>
@@ -94,6 +111,10 @@ const playVinyl = async () => {
     padding: 32px 0;
     text-align: center;
     color: var(--color-text-muted);
+  }
+
+  .subheader {
+    margin: 6px 2px;
   }
 
   .buttons {
