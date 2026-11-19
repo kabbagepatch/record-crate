@@ -5,7 +5,6 @@ import { useRouter } from 'vue-router';
 import { currentUser, userLoaded } from '../firebaseApp';
 import { guestLogin, guestSignUp, resetPassword, signIn, signUp, verifyEmail, getMe } from '../services/users';
 import { FirebaseError } from 'firebase/app';
-import { verifyRecaptcha } from '../services/service';
 
 const EMAIL_REGEX = /^\S+@\S+\.\S+$/;
 
@@ -51,31 +50,6 @@ const toggleState = (destination: 'Log in' | 'Sign up' | 'Verify email' | 'Reset
   error.value = '';
 }
 
-function getRecaptchaToken(siteKey: string, actionName: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    grecaptcha.enterprise.ready(async () => {
-      try {
-        const token = await grecaptcha.enterprise.execute(siteKey, { action: actionName })
-        resolve(token);
-      } catch (e) {
-        reject(e);
-      }
-    });
-  });
-}
-
-const verifyUserAction = async (action: string): Promise<boolean> => {
-  try {
-    const token = await getRecaptchaToken('6Lfo_vstAAAAAGdOIVuLP8fx7ZUWYfuElheq3BDB', action);
-    const response = await verifyRecaptcha(token, action);
-
-    return response.data.valid;
-  } catch (e) {
-    console.log(e);
-    return false;
-  }
-};
-
 const submitForm = async (e: SubmitEvent) => {
   e.preventDefault();
   status.value = '';
@@ -95,11 +69,6 @@ const submitForm = async (e: SubmitEvent) => {
       await signIn(email.value, password.value);
       router.replace('/');
     } else if (state.value === 'Sign up') {
-      const recaptchaVerified = await verifyUserAction('SIGNUP');
-      if (!recaptchaVerified) {
-        error.value = 'Recaptcha verification failed. Please try again later';
-        return;
-      }
       if (guestMode.value) {
         await guestSignUp(email.value, password.value, name.value);
       } else {
@@ -139,11 +108,6 @@ const submitForm = async (e: SubmitEvent) => {
 const continueAsGuest = async () => {
   requestInProgress.value = true;
   try {
-    const recaptchaVerified = await verifyUserAction('GUEST_LOGIN');
-    if (!recaptchaVerified) {
-      error.value = 'Recaptcha verification failed. Please try again later';
-      return;
-    }
     await guestLogin();
     router.replace('/');
   } catch (e) {

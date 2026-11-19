@@ -1,9 +1,10 @@
 import { ref } from 'vue';
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, type User } from 'firebase/auth';
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBDm-EuZ9h1TwfppDLnksrj7Ue-WULUd-Q",
+  apiKey: import.meta.env.VITE_API_KEY,
   authDomain: "tracker-services-508200.firebaseapp.com",
   projectId: "tracker-services-508200",
   storageBucket: "tracker-services-508200.firebasestorage.app",
@@ -13,6 +14,10 @@ const firebaseConfig = {
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
+export const appCheck = initializeAppCheck(firebaseApp, {
+  provider: new ReCaptchaEnterpriseProvider(import.meta.env.VITE_RECAPTCHA_KEY),
+  isTokenAutoRefreshEnabled: true,
+});
 
 export const currentUser = ref<User | null>(null);
 export const userLoaded = ref(false)
