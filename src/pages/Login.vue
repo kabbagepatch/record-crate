@@ -148,11 +148,6 @@ const fieldUpdate = () => {
       <p v-if="status" class="status">{{ status }}</p>
       <p v-if="error" class="error">{{ error }}</p>
     </div>
-    <small v-if="state === 'Log in' || state === 'Sign up'" class="recaptcha-notice">
-      This site is protected by reCAPTCHA and the Google
-        <a href="https://policies.google.com/privacy" target="_blank">Privacy Policy</a> and
-        <a href="https://policies.google.com/terms" target="_blank">Terms of Service</a> apply.
-    </small>
   </div>
 </template>
 
@@ -228,16 +223,5 @@ const fieldUpdate = () => {
 
   p.error {
     color: var(--color-error);
-  }
-
-  small.recaptcha-notice {
-    padding: 0 4px;
-    font-size: 10px;
-    text-align: justify;
-    margin-top: 10px;
-  }
-
-  small.recaptcha-notice a {
-    text-decoration: none;
   }
 </style>

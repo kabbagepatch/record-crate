@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@types/grecaptcha": "^3.0.9",
     "axios": "^1.20.0",
     "axios-cache-interceptor": "^1.11.4",
     "axios-case-converter": "^2.0.2",
