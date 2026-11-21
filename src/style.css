@@ -22,7 +22,7 @@
   --color-overlay: hsla(0, 0%, 0%, 0.7);
   --color-border-subtle: hsla(0, 0%, 53%, 0.33);
   --color-divider: hsl(0, 0%, 93%);
-  --color-error: red;
+  --color-error: rgb(204, 71, 71);
 
   font-family: Calibri, Helvetica, Arial, sans-serif;
   line-height: 1.6;

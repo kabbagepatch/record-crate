@@ -7,12 +7,15 @@ import ActivityList from '../components/ActivityList.vue';
 
 const vinylActivity = ref<VinylPlay[]>([]);
 const loading = ref(false);
+const error = ref(false);
 const deleting = ref(false);
 
 onMounted(async () => {
   loading.value = true;
   try {
     vinylActivity.value = await getVinylActivity();
+  } catch(e) {
+    error.value = true;
   } finally {
     loading.value = false;
   }
@@ -46,8 +49,9 @@ const deletePlay = async (play: VinylPlay) => {
 </script>
 
 <template>
-  <div v-if="!vinylActivity.length" class="loading">You have no vinyl plays yet</div>
-  <div v-if="loading" class="loading">Loading...</div>
+  <div v-if="!vinylActivity.length && !error" class="message">You have no vinyl plays yet</div>
+  <div v-if="error" class="message error">There was an error loading your vinyl plays. Please try again later.</div>
+  <div v-if="loading" class="message">Loading...</div>
   <div v-if="nowPlaying">
     <div
       class="now-playing"
@@ -82,10 +86,14 @@ const deletePlay = async (play: VinylPlay) => {
 </template>
 
 <style scoped>
-  .loading {
+  .message {
     padding: 32px 0;
     text-align: center;
     color: var(--color-text-subtle);
+  }
+
+  .error {
+    color: var(--color-error)
   }
 
   .icon-button {

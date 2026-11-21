@@ -6,12 +6,15 @@ import type { Vinyl, VinylPlay } from '../types';
 const plays = ref<VinylPlay[]>([]);
 const vinyls = ref<Vinyl[]>([]);
 const loading = ref(false);
+const error = ref(false);
 
 onMounted(async () => {
   loading.value = true;
   try {
     plays.value = await getVinylActivity();
     vinyls.value = await getVinyls();
+  } catch(e) {
+    error.value = true;
   } finally {
     loading.value = false;
   }
@@ -79,8 +82,9 @@ const barHeight = (count: number, max: number) =>
 </script>
 
 <template>
-  <div v-if="loading" class="loading">Loading...</div>
-  <div v-else-if="plays.length === 0" class="loading">No plays recorded yet.</div>
+  <div v-if="error" class="message error">There was an error loading your vinyl plays. Please try again later.</div>
+  <div v-else-if="loading" class="message">Loading...</div>
+  <div v-else-if="plays.length === 0" class="message">No plays recorded yet.</div>
   <div v-else class="stats">
 
     <!-- Chips -->
@@ -176,10 +180,14 @@ const barHeight = (count: number, max: number) =>
 </template>
 
 <style scoped>
-  .loading {
+  .message {
     padding: 32px 0;
     text-align: center;
     color: var(--color-text-muted);
+  }
+
+  .error {
+    color: var(--color-error)
   }
 
   .stats {

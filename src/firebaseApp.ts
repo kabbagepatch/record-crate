@@ -1,6 +1,13 @@
 import { ref } from 'vue';
 import { initializeApp } from 'firebase/app';
-import { getAuth, onAuthStateChanged, type User } from 'firebase/auth';
+import {
+  initializeAuth,
+  indexedDBLocalPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence,
+  onAuthStateChanged,
+  type User
+} from 'firebase/auth';
 import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 
 const firebaseConfig = {
@@ -18,10 +25,13 @@ export const appCheck = initializeAppCheck(firebaseApp, {
   provider: new ReCaptchaEnterpriseProvider(import.meta.env.VITE_RECAPTCHA_KEY),
   isTokenAutoRefreshEnabled: true,
 });
+export const auth = initializeAuth(firebaseApp, {
+  persistence: [indexedDBLocalPersistence, browserLocalPersistence, browserSessionPersistence],
+});
 
 export const currentUser = ref<User | null>(null);
 export const userLoaded = ref(false)
-onAuthStateChanged(getAuth(), user => {
+onAuthStateChanged(auth, user => {
   currentUser.value = user;
   userLoaded.value = true;
 });

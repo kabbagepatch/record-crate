@@ -15,6 +15,7 @@ const vinylId = route.params.id as string;
 const vinyl = ref<Vinyl>();
 const plays = ref<VinylPlay[]>([]);
 const loading = ref(false);
+const error = ref(false);
 const showEditModal = ref(false);
 
 const fetchVinylPlays = async (id: string) => {
@@ -24,7 +25,7 @@ const fetchVinylPlays = async (id: string) => {
     });
     plays.value.sort((a, b) => (Date.parse(b.timestamp) - Date.parse(a.timestamp)))
   } catch (e) {
-    console.error(e);
+    error.value = true;
   }
 }
 
@@ -34,7 +35,7 @@ const fetchVinyl = async (id: string) => {
     vinyl.value = await service.getVinyl(id);
     fetchVinylPlays(id);
   } catch (e) {
-    console.error(e);
+    error.value = true;
   } finally {
     loading.value = false;
   }
@@ -88,29 +89,36 @@ const playVinyl = async () => {
 
 <template>
   <AddVinylModal v-if="showEditModal && vinyl" @close="showEditModal = false" :selected-vinyl="vinyl" @save-vinyl="updateVinyl" />
-  <div v-if="loading" class="loading">Loading...</div>
-  <VinylDetails v-if="vinyl" :vinyl="vinyl" :on-play="playVinyl" />
-  <div v-if="vinyl" class="buttons">
-    <button class="icon-button" @click="favoriteVinyl()">
-      <img v-if="vinyl?.favorite" class="icon" src="../assets/icons/heart-filled.png" />
-      <img v-else class="icon" src="../assets/icons/heart.png" />
-    </button>
-    <button class="icon-button" @click="showEditModal = true">
-      <img class="icon" src="../assets/icons/edit.png" />
-    </button>
-    <button class="icon-button" @click="deleteVinyl()">
-      <img class="icon" src="../assets/icons/delete.png" />
-    </button>
+  <div v-if="error" class="message error">There was an error loading the vinyl. Please try again later</div>
+  <div v-else-if="loading" class="message">Loading...</div>
+  <div v-else>
+    <VinylDetails v-if="vinyl" :vinyl="vinyl" :on-play="playVinyl" />
+    <div v-if="vinyl" class="buttons">
+      <button class="icon-button" @click="favoriteVinyl()">
+        <img v-if="vinyl?.favorite" class="icon" src="../assets/icons/heart-filled.png" />
+        <img v-else class="icon" src="../assets/icons/heart.png" />
+      </button>
+      <button class="icon-button" @click="showEditModal = true">
+        <img class="icon" src="../assets/icons/edit.png" />
+      </button>
+      <button class="icon-button" @click="deleteVinyl()">
+        <img class="icon" src="../assets/icons/delete.png" />
+      </button>
+    </div>
+    <h3 class="subheader">Play Activity</h3>
+    <ActivityList v-if="plays" :vinyl-plays="plays" />
   </div>
-  <h3 class="subheader">Play Activity</h3>
-  <ActivityList v-if="plays" :vinyl-plays="plays" />
 </template>
 
 <style scoped>
-  .loading {
+  .message {
     padding: 32px 0;
     text-align: center;
     color: var(--color-text-muted);
+  }
+
+  .error {
+    color: var(--color-error)
   }
 
   .subheader {

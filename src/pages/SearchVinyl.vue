@@ -17,6 +17,8 @@ const results = ref<Vinyl[]>([]);
 const catalogVinyls = ref<Vinyl[]>([]);
 const existingVinyls = ref<Vinyl[]>([]);
 const loading = ref(false);
+const error = ref(false);
+const errorMessage = ref('');
 const search = ref(route.query?.search as string);
 
 const searchAlbum = async (getCatalog = false) => {
@@ -37,11 +39,12 @@ const searchAlbum = async (getCatalog = false) => {
       artist: v.discColorText,
       imageUrl: v.imageUrl,
     })) as Vinyl[];
-  } catch (error: any) {
-    console.error(error);
-    error?.status === 429
-      ? alert('You have reached the guest search limit. Please complete sign up to continue.')
-      : alert('An error occurred while searching for albums. Please try again.');
+  } catch (e: any) {
+    console.error(e);
+    error.value = true;
+    e?.status === 429
+      ? errorMessage.value = 'You have reached the guest search limit. Please complete sign up to continue.'
+      : errorMessage.value = 'An error occurred while searching for albums. Please try again later.';
   } finally {
     loading.value = false;
   }
@@ -49,6 +52,11 @@ const searchAlbum = async (getCatalog = false) => {
 
 const onSearch = (e: Event) => {
   e.preventDefault();
+  if (!user.value) {
+    error.value = true;
+    errorMessage.value = 'An error occurred while searching for albums. Please try again later.';
+    return;
+  }
 
   if (search.value) {
     if (user.value.anonymousDiscogsRequestsRemaining > 0) {
@@ -86,11 +94,12 @@ onMounted(() => {
       <img class="icon" src="../assets/icons/search.png" />
     </button>
   </form>
-  <div v-if="!results.length" class="messages">
+  <div v-if="error" class="message error">{{ errorMessage }}</div>
+  <div v-else-if="loading" class="message">Searching...</div>
+  <div v-else-if="!results.length" class="messages">
     <div class="message">Add New Records to Crate</div>
     <div v-if="user && !user.email" class="message">You have {{ user.anonymousDiscogsRequestsRemaining }} searches remaining</div>
   </div>
-  <div v-if="loading" class="loading">Searching...</div>
   <div v-else>
     <div v-if="existingVinyls.length" >
       <h3 class="section-title">Already in Crate</h3>
@@ -174,9 +183,13 @@ onMounted(() => {
     padding: 8px 0;
   }
 
-  .loading {
+  .message {
     padding: 32px 0;
     text-align: center;
     color: var(--color-text);
+  }
+
+  .error {
+    color: var(--color-error)
   }
 </style>

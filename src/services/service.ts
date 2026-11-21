@@ -3,8 +3,7 @@ import applyCaseMiddleware from 'axios-case-converter';
 import { setupCache } from 'axios-cache-interceptor';
 import { getToken } from 'firebase/app-check';
 
-import { getAuth } from '@firebase/auth';
-import { appCheck } from '../firebaseApp';
+import { appCheck, auth } from '../firebaseApp';
 
 const service = applyCaseMiddleware(axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -14,7 +13,7 @@ const service = applyCaseMiddleware(axios.create({
   }
 );
 service.interceptors.request.use(async (config) => {
-  const token = await getAuth().currentUser?.getIdToken();
+  const token = await auth.currentUser?.getIdToken();
   config.headers['Authorization'] = `Bearer ${token}`;
 
   try {

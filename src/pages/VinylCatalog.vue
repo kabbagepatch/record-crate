@@ -10,6 +10,7 @@ import { getMe } from '../services/users.ts';
 
 const vinyls = ref<Vinyl[]>([]);
 const loading = ref(false);
+const error = ref(false);
 let vinylData: Vinyl[] = [];
 
 onMounted(() => window.scrollTo(0, 0));
@@ -20,6 +21,8 @@ onMounted(async () => {
     const data = await getVinyls();
     vinyls.value = data;
     vinylData = ([] as Vinyl[]).concat(data);
+  } catch {
+    error.value = true;
   } finally {
     loading.value = false;
   }
@@ -65,8 +68,9 @@ const toggleView = (v : 'tile' | 'list') => {
         <img class="icon" src="../assets/icons/list.png" />
       </button>
     </div>
-    <div v-if="!loading && !vinyls.length" class="loading">Your crate is empty. Add a new vinyl <RouterLink to="/add">here</RouterLink></div>
-    <div v-if="loading" class="loading">Loading...</div>
+    <div v-if="error" class="message error">There was an error loading your vinyls. Please try again later</div>
+    <div v-else-if="loading" class="message">Loading...</div>
+    <div v-else-if="!vinyls.length" class="message">Your crate is empty. Add a new vinyl <RouterLink to="/add">here</RouterLink></div>
     <VinylList v-else-if="view == 'list'" :vinyls="vinyls" v-on:vinyl-select="(vinyl : Vinyl) => $router.push(`/${vinyl.id}`)" />
     <VinylTiles v-else :vinyls="vinyls" />
     <div v-if="!loading && user && isGuest" class="guest">
@@ -87,10 +91,14 @@ const toggleView = (v : 'tile' | 'list') => {
     align-items: center;
   }
 
-  .loading {
+  .message {
     padding: 32px 0;
     text-align: center;
     color: var(--color-text-muted);
+  }
+
+  .error {
+    color: var(--color-error)
   }
 
   .guest {
