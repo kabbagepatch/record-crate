@@ -70,6 +70,9 @@ export default defineConfig({
       globPatterns: ['**/*.{js,css,html,svg,png,ico}'],
       cleanupOutdatedCaches: true,
       clientsClaim: true,
+      navigateFallbackDenylist: [
+        /^\/\.well-known\//,
+      ]
     },
 
     devOptions: {
