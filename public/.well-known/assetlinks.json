@@ -1,8 +1,13 @@
 [{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "com.kavish.recordcrate",
-        "sha256_cert_fingerprints": ["BC:E4:3E:8A:F0:C5:0F:B9:8B:3B:9F:52:F9:A6:AC:02:2E:1C:0C:E4:52:70:2F:91:20:2C:51:D5:DF:79:52:57"]
-      }
-    }]
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.kavish.recordcrate",
+      "sha256_cert_fingerprints": [
+        "BC:E4:3E:8A:F0:C5:0F:B9:8B:3B:9F:52:F9:A6:AC:02:2E:1C:0C:E4:52:70:2F:91:20:2C:51:D5:DF:79:52:57",
+        "52:C7:D6:DD:FC:BD:88:8B:65:E7:3A:EB:96:7B:2A:89:C1:7A:36:0D:F4:1A:68:56:53:0B:A1:33:70:07:16:53",
+        "C0:64:5D:2D:0E:C1:13:AF:73:4F:04:D2:CE:01:80:19:E6:9C:53:C5:20:4C:F2:BB:30:19:AF:57:7E:36:07:99",
+        "76:0F:38:E0:7C:81:4D:92:82:A7:B6:D2:1C:E2:C0:0F:4B:D9:25:EE:03:27:4F:36:9B:5F:49:D7:15:D6:76:6F"
+      ]
+    }
+  }]
