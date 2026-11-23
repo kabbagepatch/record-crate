@@ -14,6 +14,7 @@ export default defineConfig({
     },
 
     manifest: {
+      id: 'record-crate',
       name: 'Record Crate',
       short_name: 'Records',
       description: 'Track your Vinyl Activity and Catalog',
@@ -44,12 +45,23 @@ export default defineConfig({
           purpose: 'maskable',
         },
       ],
-      "screenshots": [
+      screenshots: [
         {
-          "src": "screenshot-mobile.png",
-          "sizes": "1080x2152",
-          "type": "image/png",
-          "label": "Record Crate"
+          'src': 'screenshot-mobile.png',
+          'sizes': '1080x2152',
+          'form_factor': 'narrow',
+          'type': 'image/png',
+          'label': 'Record Crate'
+        }
+      ],
+      orientation: 'portrait',
+      categories: ['music', 'lifestyle', 'utilities'],
+      dir: 'ltr',
+      shortcuts: [
+        {
+          name: 'Activity',
+          description: 'View your turntable activity',
+          url: '/activity',
         }
       ]
     },
